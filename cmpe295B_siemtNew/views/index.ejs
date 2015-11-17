@@ -54,7 +54,7 @@
             }); 
 
                socket.on('Pressure', function(data) {
-                $('#pressure').html(data.press);
+                $('#pressure').html(parseInt(data.press));
                 $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/pressure?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
                 data: JSON.stringify( {  "SensorId" : data.sensorId,
                 						 "Pressure":data.press,

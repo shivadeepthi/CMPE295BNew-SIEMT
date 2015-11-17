@@ -148,13 +148,58 @@ function getSplineChartData(callback){
 				    console.log(docs);
 				    callback(null,docs);
 				  });	
-				
-//				var cursor=db.collection('temp').find({}).toArray(function(err, docs) {
-//				    console.log(docs.length);
-//				    console.log("Found the following records");
-//				    console.log(docs);
-//				    callback(null,docs);
-//				  });	
+			}
+		});
+	});
+}
+
+function suggestTempValue(callback){
+	console.log("getting the recommended value for objtemp");
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=db.collection('temp').aggregate([{$group : {_id : { $substr: [ "$timeStamp", 0, 10] }, objTemp : {$avg : "$ObjectTemp"}}},{ $sort : { _id : -1 } },{$limit:5}]).toArray(function(err,docs){
+					console.log(docs.length);
+				    console.log("Found the following records");
+				    console.log(docs);
+				    var sumTemp=0;
+				    var objTempRecommndedvalu=0;
+				    for(var j=0;j<docs.length;j++){
+				    	console.log(docs[j].objTemp);
+				    	sumTemp=sumTemp+(docs[j].objTemp);
+				    	console.log(sumTemp);
+				    }
+				    objTempRecommndedvalu=sumTemp/(docs.length);
+				    console.log("avg"+objTempRecommndedvalu);
+				    callback(null,objTempRecommndedvalu);
+				});
+			}
+		});
+	});
+}
+
+function insertPredictedValue(callback,datapoint,predVal){
+	console.log("getting the predicted values for datapoints");
+	predVal=parseInt(predVal);
+	var datapoint1="\""+datapoint+"\"";
+	console.log(datapoint1);
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				db.collection("predictionValues").findAndModify({"_id":"pid"},[['_id','asc']],{$set:{"pressure":predVal}},{},function(err,reslt){
+					if(err){
+						console.log("i'm error");
+						throw err;
+					}else{
+						callback(null,reslt);
+					}
+				});
 			}
 		});
 	});
@@ -512,6 +557,8 @@ exports.checkUser=checkUser;
 exports.updatePassword=updatePassword;
 exports.getRules=getRules;
 exports.getSplineChartData=getSplineChartData;
+exports.suggestTempValue=suggestTempValue;
+exports.insertPredictedValue=insertPredictedValue;
 //exports.insertTemp=insertTemp;
 //exports.insertHumd=insertHumd;
 //exports.insertPress=insertPress;

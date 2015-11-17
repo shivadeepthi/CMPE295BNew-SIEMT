@@ -51,7 +51,28 @@ app.get("/",function(req,res){
 });
 
 app.get("/ruleEngine",function(req,res){
+	var temp=10;
 	res.render('RuleEngine');
+});
+
+app.get("/ruleEngine/:datapoint",function(req,res){
+	var dp=req.params.datapoint;
+	if(dp=="Temperature"){
+	mongo.suggestTempValue(function(err,result){
+		if(err){
+			throw err;
+		}else{
+			console.log("average temp  "+result);
+			mongo.insertPredictedValue(function(err,resl){
+				if(err){
+					throw err;
+				}else{
+					console.log(resl);
+				}
+			},dp,result);
+		}
+	});
+	}
 });
 
 var io = require('socket.io').listen(app.listen(3000,function(){
