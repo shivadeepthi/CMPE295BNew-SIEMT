@@ -181,6 +181,64 @@ function suggestTempValue(callback){
 	});
 }
 
+function suggestHumdValue(callback){
+	console.log("getting the recommended value for humid");
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=db.collection('humidity').aggregate([{$group : {_id : { $substr: [ "$timeStamp", 0, 10] }, humid : {$avg : "$Humidity"}}},{ $sort : { _id : -1 } },{$limit:5}]).toArray(function(err,docs){
+					console.log(docs.length);
+				    console.log("Found the following records");
+				    console.log(docs);
+				    var sumhumd=0;
+				    var humidRecommndedvalu=0;
+				    for(var j=0;j<docs.length;j++){
+				    	console.log(docs[j].humid);
+				    	sumhumd=sumhumd+(docs[j].humid);
+				    	console.log(sumhumd);
+				    }
+				    humidRecommndedvalu=sumhumd/(docs.length);
+				    console.log("avg "+humidRecommndedvalu);
+				    callback(null,humidRecommndedvalu);
+				});
+			}
+		});
+	});
+}
+
+function suggestPressValue(callback){
+	console.log("getting the recommended value for pressure");
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=db.collection('pressure').aggregate([{$group : {_id : { $substr: [ "$timeStamp", 0, 10] }, press : {$avg : "$Pressure"}}},{ $sort : { _id : -1 } },{$limit:5}]).toArray(function(err,docs){
+					console.log(docs.length);
+				    console.log("Found the following records");
+				    console.log(docs);
+				    var sumpress=0;
+				    var pressRecommndedvalu=0;
+				    for(var j=0;j<docs.length;j++){
+				    	console.log(docs[j].press);
+				    	sumpress=sumpress+(docs[j].press);
+				    	console.log(sumpress);
+				    }
+				    pressRecommndedvalu=sumpress/(docs.length);
+				    console.log("avg "+pressRecommndedvalu);
+				    callback(null,pressRecommndedvalu);
+				});
+			}
+		});
+	});
+}
+
+
+
 function insertPredictedValue(callback,datapoint,predVal){
 	console.log("getting the predicted values for datapoints");
 	predVal=parseInt(predVal);
@@ -192,14 +250,71 @@ function insertPredictedValue(callback,datapoint,predVal){
 			if(err){
 				throw err;
 			}else{
-				db.collection("predictionValues").findAndModify({"_id":"pid"},[['_id','asc']],{$set:{"pressure":predVal}},{},function(err,reslt){
-					if(err){
-						console.log("i'm error");
-						throw err;
-					}else{
-						callback(null,reslt);
-					}
-				});
+				console.log("db.collection('predictionValues').update( { \"_id\" : \"pid\" },{ $set: {"+datapoint1+":"+predVal + "} }");
+				if(datapoint=="Temperature"){
+				db.collection('predictionValues').update(
+						{
+							"_id" : "pid"
+						},
+						{
+							$set : {
+								"Temperature": predVal
+							}
+						},
+						function(err, results) {
+							if (err) {
+								throw err;
+							} else {
+								console.log("updated suggested value"+ JSON.stringify(results));
+								callback(null, results);
+							}
+						});
+				}else if(datapoint=="Humidity"){
+					db.collection('predictionValues').update(
+							{
+								"_id" : "pid"
+							},
+							{
+								$set : {
+									"Humidity": predVal
+								}
+							},
+							function(err, results) {
+								if (err) {
+									throw err;
+								} else {
+									console.log("updated suggested value"+ JSON.stringify(results));
+									callback(null, results);
+								}
+							});
+					}else if(datapoint=="Pressure"){
+						db.collection('predictionValues').update(
+								{
+									"_id" : "pid"
+								},
+								{
+									$set : {
+										"pressure": predVal
+									}
+								},
+								function(err, results) {
+									if (err) {
+										throw err;
+									} else {
+										console.log("updated suggested value"+ JSON.stringify(results));
+										callback(null, results);
+									}
+								});
+						}
+//				console.log("{\"_id\":\""+pid+"\"},[['_id','asc']],{$set:{"+datapoint1+":"+predVal+"}},{}");
+//				db.collection("predictionValues").findAndModify({"_id":"pid"},[['_id','asc']],{$set:{datapoint1:predVal}},{},function(err,reslt){
+//					if(err){
+//						console.log("i'm error");
+//						throw err;
+//					}else{
+//						callback(null,reslt);
+//					}
+//				});
 			}
 		});
 	});
@@ -549,15 +664,15 @@ function fetchHumidityCharts(callback, chartname) {
 
 	}
 */
-//exports.fetchTempChart = fetchTempChart;
-//exports.fetchHumidityCharts = fetchHumidityCharts;
-//exports.alertTemp=alertTemp;
+
 exports.createUser=createUser;
 exports.checkUser=checkUser;
 exports.updatePassword=updatePassword;
 exports.getRules=getRules;
 exports.getSplineChartData=getSplineChartData;
 exports.suggestTempValue=suggestTempValue;
+exports.suggestHumdValue=suggestHumdValue;
+exports.suggestPressValue=suggestPressValue;
 exports.insertPredictedValue=insertPredictedValue;
 //exports.insertTemp=insertTemp;
 //exports.insertHumd=insertHumd;

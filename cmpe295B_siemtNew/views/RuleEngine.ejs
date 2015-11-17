@@ -302,15 +302,7 @@ $(document).ready(function() {
             url: "http://localhost:3000/ruleEngine/"+datapoint,
             type: 'GET',
             success: function(data) {
-            alert("success");
-            console.log(data.averagetemp);
-            },
-            error: function(e) {
-            console.log(e.message);
-            }
-            });
-
-            $.ajax({
+         			 $.ajax({
             url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/predictionValues?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
             type: 'GET',
             dataType:'json',
@@ -322,14 +314,17 @@ $(document).ready(function() {
             }else if(datapoint=="Humidity"){
                 document.getElementById('rulevalue').value=data.Humidity;
             }else if(datapoint=="Pressure"){
-                document.getElementById('rulevalue').value=data.Pressure;
-
+                document.getElementById('rulevalue').value=data.pressure;
             }
             },
             error: function(e) {
             console.log(e.message);
             }
             });  
+            }
+            });
+
+           
         
     });
     $(wrapper).on("click",".remove_field", function(e){ 

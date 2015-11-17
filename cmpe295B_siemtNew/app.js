@@ -67,12 +67,42 @@ app.get("/ruleEngine/:datapoint",function(req,res){
 				if(err){
 					throw err;
 				}else{
-					console.log(resl);
+					console.log("resl"+resl);
 				}
 			},dp,result);
 		}
 	});
-	}
+	}else if(dp=="Humidity"){
+		mongo.suggestHumdValue(function(err,result){
+			if(err){
+				throw err;
+			}else{
+				console.log("average humid  "+result);
+				mongo.insertPredictedValue(function(err,resl){
+					if(err){
+						throw err;
+					}else{
+						console.log("resl"+resl);
+					}
+				},dp,result);
+			}
+		});
+		}else if(dp=="Pressure"){
+			mongo.suggestPressValue(function(err,result){
+				if(err){
+					throw err;
+				}else{
+					console.log("average Press  "+result);
+					mongo.insertPredictedValue(function(err,resl){
+						if(err){
+							throw err;
+						}else{
+							console.log("resl"+resl);
+						}
+					},dp,result);
+				}
+			});
+			}
 });
 
 var io = require('socket.io').listen(app.listen(3000,function(){
