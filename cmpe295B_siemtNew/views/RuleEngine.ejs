@@ -23,7 +23,7 @@
     <link id="base-style" href="/css/style.css" rel="stylesheet">
     <link id="base-style-responsive" href="/css/style-responsive.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>-->
     <!-- end: CSS -->
     <script src='http://localhost:3000/socket.io/socket.io.js'></script>
      
@@ -92,7 +92,7 @@
                 <div class="nav-collapse sidebar-nav">
                     <ul class="nav nav-tabs nav-stacked main-menu">
                         <li><a href="/"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Dashboard</span></a></li>   
-                        <li><a href="/charts"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
+                        <li><a href="/chart"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
                         <li><a href="/table"><i class="icon-align-justify"></i><span class="hidden-tablet"> Tables</span></a></li>
                         <li><a href="/ruleEngine"><i class="icon-align-justify"></i><span class="hidden-tablet"> Rules Engine</span></a></li>
                     </ul>
@@ -242,7 +242,7 @@ $(document).ready(function() {
         var datapoint=document.getElementById('criteria').value;
         var criteriaVal=document.getElementById('condi').value;
         var datapoint_val=document.getElementById('rulevalue').value;
-        var trigger_action=document.getElementById('actionvalue').value;       
+        var trigger_action=document.getElementById('actionvalue').value;    
         
         if(criteriaVal=="$gte"){
                 criteriaVal = ">=";
@@ -265,7 +265,7 @@ $(document).ready(function() {
               type: "PUT",
               contentType: "application/json" } );
 
-            $.ajax({
+        $.ajax({
           url: 'https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/counter/ruleid?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0',
           type: 'get',
           dataType: 'json',
@@ -281,10 +281,10 @@ $(document).ready(function() {
                                             "Action":trigger_action,
                                             "Status":"Active" } ),
                     type: "POST",
-                    contentType: "application/json" } );
- 
-
-
+                    contentType: "application/json" ,
+                    success:function(data){
+                        testrule();
+                    }} );
           },
           error: function (XMLHttpRequest, textStatus, errorThrown) {
             console.log('error', errorThrown);
@@ -292,41 +292,7 @@ $(document).ready(function() {
         });        
     });
     
-    $(suggestvalue).click(function(e){
-        var datapoint=document.getElementById('criteria').value;
-        var criteriaVal=document.getElementById('condi').value;
-        var datapoint_val=document.getElementById('rulevalue').value;
-        var trigger_action=document.getElementById('actionvalue').value; 
-        console.log("http://localhost:3000/ruleEngine/"+datapoint);
-            $.ajax({
-            url: "http://localhost:3000/ruleEngine/"+datapoint,
-            type: 'GET',
-            success: function(data) {
-         			 $.ajax({
-            url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/predictionValues?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
-            type: 'GET',
-            dataType:'json',
-            success: function(data) {
-                data=JSON.parse(JSON.stringify(data));
-            alert("success in prediction value"+ data.Temperature);
-            if(datapoint=="Temperature"){
-                document.getElementById('rulevalue').value=data.Temperature;
-            }else if(datapoint=="Humidity"){
-                document.getElementById('rulevalue').value=data.Humidity;
-            }else if(datapoint=="Pressure"){
-                document.getElementById('rulevalue').value=data.pressure;
-            }
-            },
-            error: function(e) {
-            console.log(e.message);
-            }
-            });  
-            }
-            });
-
-           
-        
-    });
+    
     $(wrapper).on("click",".remove_field", function(e){ 
     
     //var id = this.id; //document.getElementById(this.id).value;
@@ -343,13 +309,63 @@ $(document).ready(function() {
     });
 
    });
+
+    $('#suggestValue').click(function(){
+    
+        var datapoint=document.getElementById('criteria').value;
+        var criteriaVal=document.getElementById('condi').value;
+        var datapoint_val=document.getElementById('rulevalue').value;
+        var trigger_action=document.getElementById('actionvalue').value; 
+            
+            $.ajax({
+            url: "/suggestedValue",
+            data: JSON.stringify( { "datapoint":datapoint} ),
+            type: "POST",
+            contentType: "application/json",
+            success:function(data){
+                console.log(JSON.stringify(data));
+                alert("succes");    
+            },
+            error:function (xhr, status, err) { 
+                alert("error"+err.message);
+            }
+                });
+
+           $.ajax({
+            url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/predictionValues?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
+            type: 'GET',
+            dataType:'json',
+            success: function(data) {
+                    var str=JSON.stringify(data);
+                    alert("success in prediction value"+str);
+                    var obj=JSON.parse(str);
+                        if(datapoint=="Temperature"){
+                            alert(obj[0].Temperature);
+                            document.getElementById("rulevalue").value=obj[0].Temperature;
+                            document.getElementById("datapoint").value="Temperature";
+                        }else if(datapoint=="Pressure"){
+                            alert(obj[0].pressure);
+                            document.getElementById("rulevalue").value=obj[0].pressure;
+                            document.getElementById("datapoint").value="Pressure";
+                        }else if(datapoint=="Humidity"){
+                            alert(obj[0].Humidity);
+                            document.getElementById("rulevalue").value=obj[0].Humidity;
+                            document.getElementById("datapoint").value="Humidity";
+                        }
+                                     },
+            error: function(e) {
+            console.log(e.message);
+            }
+            });  
+        
+    });
 </script>
 
 
 
 <script type="text/javascript">
 
-window.onload = function testrule(){
+function testrule(){
  var getdata="";
  var wrapper= $("#input_fields_wrap"); //Fields wrapper
  
@@ -370,6 +386,10 @@ window.onload = function testrule(){
       }
     });
 
+}
+
+window.onload = function(){
+    testrule();
 }
 
 function ruleEngine(){
@@ -498,10 +518,6 @@ function ruleEngine(){
         <script src="/js/retina.js"></script>
 
         <script src="/js/custom.js"></script>
-        <script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-
-<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 
 </body>
 

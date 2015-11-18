@@ -52,24 +52,56 @@ app.get("/",function(req,res){
 
 app.get("/ruleEngine",function(req,res){
 	var temp=10;
-	res.render('RuleEngine');
+	res.render('RuleEngine',{"r":0});
 });
 
-app.get("/ruleEngine/:datapoint",function(req,res){
-	var dp=req.params.datapoint;
+app.get("/chart",function(req,res){
+	mongo.getSplineChartData(function(err,reslt){
+		if(err){
+			throw err;
+		}else{
+			var recs=JSON.parse(JSON.stringify(reslt));
+			console.log(reslt.length);
+			var dates=[];
+			var objTemp=[];
+			var ambTemp=[];
+			for(var k=0;k<reslt.length;k++){
+				if(reslt[k]._id!=""){
+					var str = reslt[k]._id;
+//					str.replace(/"/g, ""); 
+					
+				dates.push(str);
+				}
+				objTemp.push(reslt[k].objTemp);
+				ambTemp.push(reslt[k].ambTemp);
+			}
+			console.log("dates  "+JSON.stringify(dates).replace (/"/g,''));
+			res.render('charts',{"objTemp":JSON.stringify(objTemp),"dates":JSON.stringify(dates).replace (/"/g,''),"ambTemp":JSON.stringify(ambTemp)});
+		}
+	});
+	
+});
+
+app.post("/suggestedValue",function(req,res){
+	var dp=req.body.datapoint;
+	console.log("In post  "+dp);
 	if(dp=="Temperature"){
 	mongo.suggestTempValue(function(err,result){
 		if(err){
 			throw err;
 		}else{
-			console.log("average temp  "+result);
+			var r=result;
+			console.log("average temp  "+r);
 			mongo.insertPredictedValue(function(err,resl){
 				if(err){
 					throw err;
 				}else{
-					console.log("resl"+resl);
+					console.log("r"+r);
+					res.setHeader('Content-Type','application/json');
+					res.send(JSON.stringify({rsl:r}));
+					
 				}
-			},dp,result);
+			},dp,r);
 		}
 	});
 	}else if(dp=="Humidity"){
@@ -182,4 +214,3 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 );
 
 //io.listen(server);
-

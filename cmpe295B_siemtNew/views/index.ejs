@@ -20,7 +20,7 @@
     <link id="base-style" href="/css/style.css" rel="stylesheet">
     <link id="base-style-responsive" href="/css/style-responsive.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>-->
     <!-- end: CSS -->
     <script src='http://localhost:3000/socket.io/socket.io.js'></script>
     <script type="text/javascript" src="http://pubnub.github.io/eon/v/eon/0.0.9/eon.js"></script>
@@ -324,7 +324,7 @@
                 <div class="nav-collapse sidebar-nav">
                     <ul class="nav nav-tabs nav-stacked main-menu">
                         <li><a href="/"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Dashboard</span></a></li>   
-                        <li><a href="/charts"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
+                        <li><a href="/chart"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
                         <li><a href="/table"><i class="icon-align-justify"></i><span class="hidden-tablet"> Tables</span></a></li>
                         <li><a href="/ruleEngine"><i class="icon-align-justify"></i><span class="hidden-tablet"> Rules Engine</span></a></li>
                     </ul>
@@ -453,20 +453,20 @@ setInterval(function(){
 
                     <ul class="unstyled">
                         
-                        <li><span class="sparkLineStats3"></span> 
-                            Average Object temp 
+                        <li><a href='/chart'><span class="sparkLineStats3"></span> 
+                            Average Object temp </a>
                         </li>
-                        <li><span class="sparkLineStats4"></span>
-                            Average Pressure 
+                        <li><a href='/chart'><span class="sparkLineStats4"></span>
+                            Average Pressure </a>
                         </li>
-                        <li><span class="sparkLineStats5"></span>
-                            Average Humidity 
+                        <li><a href='/chart'><span class="sparkLineStats5"></span>
+                            Average Humidity </a>
                         </li>
-                        <li><span class="sparkLineStats6"></span>
-                            Outliars(alerts) over lasweek
+                        <li><a href='/chart'><span class="sparkLineStats6"></span>
+                            Outliars(alerts) over lasweek</a>
                         </li>
-                        <li><span class="sparkLineStats7"></span>
-                            Real-time graphs 
+                        <li><a href='/chart'><span class="sparkLineStats7"></span>
+                            Real-time graphs </a>
                         </li>
                     </ul>
                     
