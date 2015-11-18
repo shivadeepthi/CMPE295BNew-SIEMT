@@ -316,12 +316,17 @@ $(document).ready(function() {
         var criteriaVal=document.getElementById('condi').value;
         var datapoint_val=document.getElementById('rulevalue').value;
         var trigger_action=document.getElementById('actionvalue').value; 
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 82146c0ec063ec1cdcd3061668bba41075978ba2
             $.ajax({
             url: "/suggestedValue",
             data: JSON.stringify( { "datapoint":datapoint} ),
             type: "POST",
             contentType: "application/json",
+<<<<<<< HEAD
             success:function(data){
                 console.log(JSON.stringify(data));
                 alert("succes");    
@@ -332,6 +337,11 @@ $(document).ready(function() {
                 });
 
            $.ajax({
+=======
+                });
+
+            $.ajax({
+>>>>>>> 82146c0ec063ec1cdcd3061668bba41075978ba2
             url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/predictionValues?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
             type: 'GET',
             dataType:'json',

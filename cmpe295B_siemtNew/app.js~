@@ -83,7 +83,8 @@ app.get("/chart",function(req,res){
 	
 });
 
-
+=======
+>>>>>>> 82146c0ec063ec1cdcd3061668bba41075978ba2
 app.post("/suggestedValue",function(req,res){
 	var dp=req.body.datapoint;
 	console.log("In post  "+dp);
@@ -99,9 +100,12 @@ app.post("/suggestedValue",function(req,res){
 					throw err;
 				}else{
 					console.log("r"+r);
-			res.setHeader('Content-Type','application/json');
+<<<<<<< HEAD
+					res.setHeader('Content-Type','application/json');
 					res.send(JSON.stringify({rsl:r}));
-
+					
+=======
+>>>>>>> 82146c0ec063ec1cdcd3061668bba41075978ba2
 				}
 			},dp,r);
 		}
