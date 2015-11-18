@@ -52,24 +52,26 @@ app.get("/",function(req,res){
 
 app.get("/ruleEngine",function(req,res){
 	var temp=10;
-	res.render('RuleEngine');
+	res.render('RuleEngine',{"r":0});
 });
 
-app.get("/ruleEngine/:datapoint",function(req,res){
-	var dp=req.params.datapoint;
+app.post("/suggestedValue",function(req,res){
+	var dp=req.body.datapoint;
+	console.log("In post  "+dp);
 	if(dp=="Temperature"){
 	mongo.suggestTempValue(function(err,result){
 		if(err){
 			throw err;
 		}else{
-			console.log("average temp  "+result);
+			var r=result;
+			console.log("average temp  "+r);
 			mongo.insertPredictedValue(function(err,resl){
 				if(err){
 					throw err;
 				}else{
-					console.log("resl"+resl);
+					console.log("r"+r);
 				}
-			},dp,result);
+			},dp,r);
 		}
 	});
 	}else if(dp=="Humidity"){
