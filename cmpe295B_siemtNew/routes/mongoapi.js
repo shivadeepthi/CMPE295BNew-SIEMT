@@ -153,6 +153,29 @@ function getSplineChartData(callback){
 	});
 }
 
+/*function getPressure(callback){
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+    
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=db.collection('pressure').aggregate([{$group : {_id : { $substr: [ "$timeStamp", 0, 10] }, objTemp : {$avg : "$Pressure"}}},{ $sort : { _id : 1 } }]).toArray(function(err, docs) {
+				    
+					console.log(docs.length);
+				    console.log("Found the following records");
+				    console.log(docs);
+				    
+				  });
+				
+			
+			}
+		});
+	});
+}*/
+
+
 function suggestTempValue(callback){
 	console.log("getting the recommended value for objtemp");
 	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});

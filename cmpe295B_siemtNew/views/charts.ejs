@@ -66,14 +66,11 @@
 
         <script>
         $(document).ready(function () {
-            var ObjectTemp= <%=objTemp%>;
-            console.log(ObjectTemp);
-            var dates= <%=dates%>;
-            console.log(dates);
-            var ambTemp= <%=ambTemp%>;
-            console.log(ambTemp);
-            $(function () {
-            $('#container1').highcharts({
+            
+	           var dates= <%=dates%>;
+	           var ambTemp= <%=ambTemp%>;
+	           $(function () {
+    $('#container1').highcharts({
         chart: {
             type: 'spline'
         },
@@ -83,8 +80,8 @@
         subtitle: {
             text: 'Source: WorldClimate.com'
         },
-        xAxis: {
-            categories: dates
+         xAxis: {
+        type: 'datetime'
         },
         yAxis: {
             title: {
@@ -92,7 +89,7 @@
             },
             labels: {
                 formatter: function () {
-                    return this.value + 'Â°';
+                    return this.value + 'F°';
                 }
             }
         },
@@ -110,16 +107,24 @@
             }
         },
         series: [{
-            name: 'Tokyo',
+            name: 'ObjectTemp',
             marker: {
                 symbol: 'square'
             },
-            data: ObjectTemp
+            data: dates
 
+        }, {
+            name: 'AmbientTemp',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: ambTemp
         }]
     });
 });
-        });
+	            
+	
+	        });
         </script>
 
 		
@@ -214,7 +219,7 @@
 					</div>
 					<div class="box-content">
 						<div id="container1"  class="center" style="height:300px;" ></div>
-						<p id="hoverdata">Avg Object Temperature data(<span id="x">0</span>, <span id="y">0</span>). <span id="clickdata"></span></p>
+						
 					</div>
 				</div>
 				

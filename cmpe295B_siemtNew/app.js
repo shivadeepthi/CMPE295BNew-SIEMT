@@ -64,22 +64,36 @@ app.get("/chart",function(req,res){
 			var recs=JSON.parse(JSON.stringify(reslt));
 			console.log(reslt.length);
 			var dates=[];
-			var objTemp=[];
-			var ambTemp=[];
+			var temp=[];
+			var date;
 			for(var k=0;k<reslt.length;k++){
 				if(reslt[k]._id!=""){
-					var str = reslt[k]._id;
-					str.replace(/"/g, ""); 
-					
-				dates.push(str);
+				date = Date.parse(reslt[k]._id);
+				var objTemp=[];
+				var ambTemp=[];
+     			objTemp[0] = date;
+     			ambTemp[0]= date;
+     			objTemp[1] = reslt[k].objTemp;
+     			ambTemp[1] = reslt[k].ambTemp;
+			    dates.push(objTemp);
+			    temp.push(ambTemp);
 				}
-				objTemp.push(reslt[k].objTemp);
-				ambTemp.push(reslt[k].ambTemp);
+				
 			}
-			console.log("dates  "+JSON.stringify(dates).replace (/"/g,''));
-			res.render('charts',{"objTemp":JSON.stringify(objTemp),"dates":JSON.stringify(dates).replace (/"/g,''),"ambTemp":JSON.stringify(ambTemp)});
+			
+			res.render('charts',{"dates":JSON.stringify(dates),"ambTemp":JSON.stringify(temp)});
 		}
 	});
+	
+	/*mongo.getTempPressure(function(err,result){
+		if(err){
+			throw err;
+		} 
+		else{
+			
+		}
+		
+	});*/
 	
 });
 

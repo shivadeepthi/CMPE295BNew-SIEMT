@@ -22,6 +22,8 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
     <!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>-->
     <!-- end: CSS -->
+     <script src="/js/jquery-1.9.1.min.js"></script>
+     <script src="/js/jquery-migrate-1.0.0.min.js"></script>
     <script src='http://localhost:3000/socket.io/socket.io.js'></script>
     <script type="text/javascript" src="http://pubnub.github.io/eon/v/eon/0.0.9/eon.js"></script>
     <link type="text/css" rel="stylesheet" href="http://pubnub.github.io/eon/v/eon/0.0.9/eon.css" />
@@ -31,6 +33,7 @@
             var socket = io.connect('//localhost:3000');
             socket.on('objTemp', function(data) {
                 $('#objTemp').html(parseInt(data.objTemp));
+                console.log("This is my places");
                 $('#ambTemp').html(parseInt(data.ambTemp));
                 $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/temp?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
                 data: JSON.stringify( { "SensorId" : data.sensorId,
@@ -40,7 +43,22 @@
                 type: "POST",
                 contentType: "application/json" } );
             });
-            
+            socket.on('allData', function(data) {
+                $('#objTemp1').html(parseInt(data.objTemp));
+                $('#ambTemp1').html(parseInt(data.ambTemp));
+                $('#humidity1').html(parseInt(data.humidity));
+                $('#pressure1').html(parseInt(data.press));
+                console.log("I am here");
+                $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/allData?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
+                data: JSON.stringify( { "SensorId" : data.sensorId,
+                						"ObjectTemp":data.objTemp,
+                                        "AmbientTemp":data.ambTemp,
+                                        "Humidity":data.humidity,
+                                        "Pressure":data.press,
+                                        "timeStamp":new Date() } ),
+                type: "POST",
+                contentType: "application/json" } );
+            });
 
               socket.on('humTemp', function(data) {
                 $('#humidity').html(parseInt(data.humidity));
@@ -537,8 +555,7 @@ setInterval(function(){
     
     <!-- start: JavaScript-->
 
-        <script src="/js/jquery-1.9.1.min.js"></script>
-        <script src="/js/jquery-migrate-1.0.0.min.js"></script>
+       
     
         <script src="/js/jquery-ui-1.10.0.custom.min.js"></script>
     
