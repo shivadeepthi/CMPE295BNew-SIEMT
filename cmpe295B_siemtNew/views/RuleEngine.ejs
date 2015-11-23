@@ -309,66 +309,60 @@ $(document).ready(function() {
     });
 
    });
-
-    $('#suggestValue').click(function(){
+  
+  $('#suggestValue').click(function(){
     
-        var datapoint=document.getElementById('criteria').value;
-        var criteriaVal=document.getElementById('condi').value;
+         var datapoint=document.getElementById('criteria').value;
+         var criteriaVal=document.getElementById('condi').value;
         var datapoint_val=document.getElementById('rulevalue').value;
         var trigger_action=document.getElementById('actionvalue').value; 
-<<<<<<< HEAD
-            
-=======
+ 
+             $.ajax({
+             url: "/suggestedValue",
+             data: JSON.stringify( { "datapoint":datapoint} ),
+             type: "POST",
+             contentType: "application/json",
 
->>>>>>> 82146c0ec063ec1cdcd3061668bba41075978ba2
-            $.ajax({
-            url: "/suggestedValue",
-            data: JSON.stringify( { "datapoint":datapoint} ),
-            type: "POST",
-            contentType: "application/json",
-<<<<<<< HEAD
-            success:function(data){
-                console.log(JSON.stringify(data));
-                alert("succes");    
-            },
-            error:function (xhr, status, err) { 
-                alert("error"+err.message);
-            }
-                });
-
-           $.ajax({
-=======
-                });
+             success:function(data){
+                 console.log(JSON.stringify(data));
+                 alert("succes");    
+             },
+             error:function (xhr, status, err) { 
+                 alert("error"+err.message);
+             }
+                 });
 
             $.ajax({
->>>>>>> 82146c0ec063ec1cdcd3061668bba41075978ba2
+                 });
+
+             $.ajax({
             url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/predictionValues?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
-            type: 'GET',
-            dataType:'json',
-            success: function(data) {
-                    var str=JSON.stringify(data);
-                    alert("success in prediction value"+str);
-                    var obj=JSON.parse(str);
-                        if(datapoint=="Temperature"){
-                            alert(obj[0].Temperature);
-                            document.getElementById("rulevalue").value=obj[0].Temperature;
-                            document.getElementById("datapoint").value="Temperature";
-                        }else if(datapoint=="Pressure"){
-                            alert(obj[0].pressure);
-                            document.getElementById("rulevalue").value=obj[0].pressure;
-                            document.getElementById("datapoint").value="Pressure";
-                        }else if(datapoint=="Humidity"){
-                            alert(obj[0].Humidity);
-                            document.getElementById("rulevalue").value=obj[0].Humidity;
-                            document.getElementById("datapoint").value="Humidity";
-                        }
-                                     },
-            error: function(e) {
-            console.log(e.message);
-            }
-            });  
+             type: 'GET',
+             dataType:'json',
+             success: function(data) {
+                     var str=JSON.stringify(data);
+                     alert("success in prediction value"+str);
+                     var obj=JSON.parse(str);
+                         if(datapoint=="Temperature"){
+                             alert(obj[0].Temperature);
+                             document.getElementById("rulevalue").value=obj[0].Temperature;
+                             document.getElementById("datapoint").value="Temperature";
+                         }else if(datapoint=="Pressure"){
+                             alert(obj[0].pressure);
+                             document.getElementById("rulevalue").value=obj[0].pressure;
+                             document.getElementById("datapoint").value="Pressure";
+                         }else if(datapoint=="Humidity"){
+                             alert(obj[0].Humidity);
+                             document.getElementById("rulevalue").value=obj[0].Humidity;
+                             document.getElementById("datapoint").value="Humidity";
+                         }
+                                      },
+             error: function(e) {
+             console.log(e.message);
+             }
+             });  
         
-    });
+     });
 </script>
 
 
