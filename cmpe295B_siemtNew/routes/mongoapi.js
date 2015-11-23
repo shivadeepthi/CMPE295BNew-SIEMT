@@ -143,9 +143,7 @@ function getSplineChartData(callback){
 				throw err;
 			}else{
 				var cursor=db.collection('temp').aggregate([{$group : {_id : { $substr: [ "$timeStamp", 0, 10] }, objTemp : {$avg : "$ObjectTemp"},ambTemp:{$avg : "$AmbientTemp"}}},{ $sort : { _id : 1 } }]).toArray(function(err, docs) {
-				    console.log(docs.length);
-				    console.log("Found the following records");
-				    console.log(docs);
+				    
 				    callback(null,docs);
 				  });	
 			}
@@ -153,7 +151,7 @@ function getSplineChartData(callback){
 	});
 }
 
-/*function getPressure(callback){
+function getTempMinMax(callback){
 	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
     
 	db.open(function(err, db) {
@@ -161,19 +159,20 @@ function getSplineChartData(callback){
 			if(err){
 				throw err;
 			}else{
-				var cursor=db.collection('pressure').aggregate([{$group : {_id : { $substr: [ "$timeStamp", 0, 10] }, objTemp : {$avg : "$Pressure"}}},{ $sort : { _id : 1 } }]).toArray(function(err, docs) {
-				    
+				var cursor=	db.collection('temp').aggregate( [{ $match: { $and: [{ ObjectTemp: {$lt: 90, $gt: 0 } }, { AmbientTemp: {$lt: 90, $gt: 0 } }] }},{ $group: {_id: {$substr: ["$timeStamp", 0, 10]}, objTempMax: { $max: "$ObjectTemp" }, objTempMin: { $min: "$ObjectTemp" }, ambTempMax: { $max: "$AmbientTemp" }, ambTempMin: { $min: "$AmbientTemp" } } },
+				           	                 {$sort: {_id: -1}}, {$limit:7}] ).toArray(function(err, docs){
 					console.log(docs.length);
-				    console.log("Found the following records");
+				    console.log("Found the following in max min records");
 				    console.log(docs);
-				    
+				    callback(null,docs);
+
 				  });
 				
 			
 			}
 		});
 	});
-}*/
+}
 
 
 function suggestTempValue(callback){
@@ -693,6 +692,7 @@ exports.checkUser=checkUser;
 exports.updatePassword=updatePassword;
 exports.getRules=getRules;
 exports.getSplineChartData=getSplineChartData;
+exports.getTempMinMax=getTempMinMax;
 exports.suggestTempValue=suggestTempValue;
 exports.suggestHumdValue=suggestHumdValue;
 exports.suggestPressValue=suggestPressValue;

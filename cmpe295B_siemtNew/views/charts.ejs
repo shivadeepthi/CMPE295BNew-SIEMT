@@ -66,20 +66,20 @@
 
         <script>
         $(document).ready(function () {
-            
-	           var dates= <%=dates%>;
-	           var ambTemp= <%=ambTemp%>;
+               var minObj= <%=minObj%>;
+	           var chart1= "chart1";
+	           var chart2 = "chart2";
+	         
+	        	           
 	           $(function () {
-    $('#container1').highcharts({
+                $('#container1').highcharts({
         chart: {
             type: 'spline'
         },
         title: {
             text: 'Monthly Average Temperature'
         },
-        subtitle: {
-            text: 'Source: WorldClimate.com'
-        },
+        
          xAxis: {
         type: 'datetime'
         },
@@ -111,18 +111,76 @@
             marker: {
                 symbol: 'square'
             },
-            data: dates
+            data: minObj[0][chart1].dates
 
         }, {
             name: 'AmbientTemp',
             marker: {
                 symbol: 'diamond'
             },
-            data: ambTemp
+            data: minObj[0][chart1].ambTemp
         }]
     });
 });
-	            
+	   $(function () {
+    $('#flotchart').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Weekly Minimun and Maximum values of Temperature'
+        },
+       
+        xAxis: {
+            type: 'datetime',
+            
+            title: {
+                text: 'Date'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Temperature'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + 'F°';
+                }
+            }
+        },
+        tooltip: {
+            headerFormat: '<b>{series.name}</b><br>',
+            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+        },
+
+        plotOptions: {
+            spline: {
+                marker: {
+                    enabled: true
+                }
+            }
+        },
+
+        series: [{
+            name: 'Obj temp Max in last 1 week',
+            
+            data: minObj[1][chart2].maxO
+        }, {
+            name: 'Obj temp Min in last 1 week',
+            data:  minObj[1][chart2].minO
+        },
+        {
+            name: 'Amb temp Min in last 1 week',
+            data:  minObj[1][chart2].minA
+        },
+        {
+            name: 'Amb temp Max in last 1 week',
+            data:  minObj[1][chart2].maxA
+        }
+        
+        ]
+    });
+});         
 	
 	        });
         </script>
@@ -211,7 +269,7 @@
 				
 				<div class="box">
 					<div class="box-header">
-						<h2><i class="halflings-icon list-alt"></i><span class="break"></span>Chart with points</h2>
+						<h2><i class="halflings-icon list-alt"></i><span class="break"></span></h2>
 						<div class="box-icon">
 							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
 							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
@@ -225,7 +283,7 @@
 				
 				<div class="box">
 					<div class="box-header">
-						<h2><i class="halflings-icon list-alt"></i><span class="break"></span>Flot</h2>
+						<h2><i class="halflings-icon list-alt"></i><span class="break"></span></h2>
 						<div class="box-icon">
 							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
 							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>

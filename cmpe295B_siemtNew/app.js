@@ -57,45 +57,78 @@ app.get("/ruleEngine",function(req,res){
 
 
 app.get("/chart",function(req,res){
-	mongo.getSplineChartData(function(err,reslt){
-		if(err){
-			throw err;
-		}else{
-			var recs=JSON.parse(JSON.stringify(reslt));
-			console.log(reslt.length);
-			var dates=[];
-			var temp=[];
-			var date;
-			for(var k=0;k<reslt.length;k++){
-				if(reslt[k]._id!=""){
-				date = Date.parse(reslt[k]._id);
-				var objTemp=[];
-				var ambTemp=[];
-     			objTemp[0] = date;
-     			ambTemp[0]= date;
-     			objTemp[1] = reslt[k].objTemp;
-     			ambTemp[1] = reslt[k].ambTemp;
-			    dates.push(objTemp);
-			    temp.push(ambTemp);
-				}
-				
-			}
-			
-			res.render('charts',{"dates":JSON.stringify(dates),"ambTemp":JSON.stringify(temp)});
-		}
+	 var dates=[];
+	 var temp=[];
+	 var finalJson=[];
+	 mongo.getSplineChartData(function(err,reslt){
+	  if(err){
+	   throw err;
+	  }else{
+	   var recs=JSON.parse(JSON.stringify(reslt));
+	   console.log(reslt.length);
+	   
+	   var date;
+	   for(var k=0;k<reslt.length;k++){
+	    if(reslt[k]._id!=""){
+	    date = Date.parse(reslt[k]._id);
+	    var objTemp=[];
+	    var ambTemp=[];
+	        objTemp[0] = date;
+	        ambTemp[0]= date;
+	        objTemp[1] = reslt[k].objTemp;
+	        ambTemp[1] = reslt[k].ambTemp;
+	       dates.push(objTemp);
+	       temp.push(ambTemp);
+	    }
+	    
+	   }
+	   mongo.getTempMinMax(function(err,result){
+		     var maxObj=[];
+			 var minObj=[];
+			 var maxAmb=[];
+			 var minAmb=[];
+	    if(err){
+	     throw err;
+	    } 
+	    else{
+	     var recs=JSON.parse(JSON.stringify(result));
+	     console.log(result.length);
+	     
+	     var date;
+	     for(var k=result.length-1;k>=0;k--){
+	      if(result[k]._id!=""){
+	      date = Date.parse(result[k]._id);
+	      var objTemp=[];
+	      var objTemp1=[];
+	      var objTemp2=[];
+	      var objTemp3=[];
+	          objTemp[0] = date;
+	          objTemp[1] = result[k].objTempMax;
+	          objTemp1[0] = date;
+	          objTemp1[1] = result[k].objTempMin;
+	          objTemp2[0] = date;
+	          objTemp2[1] = result[k].ambTempMax;
+	          objTemp3[0] = date;
+	          objTemp3[1] = result[k].ambTempMin;
+	          maxObj.push(objTemp);
+	          minObj.push(objTemp1);
+	          maxAmb.push(objTemp2);
+	          minAmb.push(objTemp3);
+	      }
+	      
+	     }
+	     finalJson.push({"chart1":{"dates":dates,"ambTemp":temp}}, {"chart2":{"maxO": maxObj, "minO": minObj, "maxA":maxAmb, "minA": minAmb}});
+	     console.log(JSON.stringify(finalJson).replace(/\"/g, ""));
+	     res.render('charts',{"minObj":JSON.stringify(finalJson).replace(/\"/g, "")});
+	     // write another function..and so on and close accordingly
+	    }
+	    
+	   });
+	
+	  }
+	 });
+	  
 	});
-	
-	/*mongo.getTempPressure(function(err,result){
-		if(err){
-			throw err;
-		} 
-		else{
-			
-		}
-		
-	});*/
-	
-});
 
 
 app.post("/suggestedValue",function(req,res){
