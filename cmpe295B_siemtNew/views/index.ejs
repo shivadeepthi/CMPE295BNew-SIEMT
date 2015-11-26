@@ -43,22 +43,7 @@
                 type: "POST",
                 contentType: "application/json" } );
             });
-            socket.on('allData', function(data) {
-                $('#objTemp1').html(parseInt(data.objTemp));
-                $('#ambTemp1').html(parseInt(data.ambTemp));
-                $('#humidity1').html(parseInt(data.humidity));
-                $('#pressure1').html(parseInt(data.press));
-                console.log("I am here");
-                $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/allData?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
-                data: JSON.stringify( { "SensorId" : data.sensorId,
-                						"ObjectTemp":data.objTemp,
-                                        "AmbientTemp":data.ambTemp,
-                                        "Humidity":data.humidity,
-                                        "Pressure":data.press,
-                                        "timeStamp":new Date() } ),
-                type: "POST",
-                contentType: "application/json" } );
-            });
+            
 
               socket.on('humTemp', function(data) {
                 $('#humidity').html(parseInt(data.humidity));
@@ -70,7 +55,16 @@
                 type: "POST",
                 contentType: "application/json" } );
             }); 
-
+				socket.on('Accelero', function(data) {
+                $('#accerlero').html(parseInt(data.acc));
+                console.log(data.acc);
+                $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Accelero?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
+                data: JSON.stringify( { "SensorId" : data.sensorId,
+                						"Accelero":data.acc,
+                                        "timeStamp":new Date()} ),
+                type: "POST",
+                contentType: "application/json" } );
+            }); 
                socket.on('Pressure', function(data) {
                 $('#pressure').html(parseInt(data.press));
                 $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/pressure?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
