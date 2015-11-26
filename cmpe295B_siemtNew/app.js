@@ -31,7 +31,6 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(bodyParser());
 app.use(cookieParser());
-//app.use(expressSession({ secret : process.env.SESSION_SECRET||'secret',resave:false,saveuninitialized:false}));
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -126,22 +125,11 @@ app.get("/chart",function(req,res){
 						}else{
 							var recs=JSON.stringify(piereslt);
 							console.log("retrun from the pie chart::::"+piereslt.length);
-							
-							/*piechart.push({"name":"abc", "y":reslt[0].count10},
-									{"name":"def", "y":reslt[0].count30},
-									{"name":"dgh", "y":reslt[0].count60},
-									{"name":"jkl", "y":reslt[0].count90},
-									{"name":"nmk", "y":reslt[0].count120},
-									{"name":"iop", "y":reslt[0].count150}
-									);
-							var newpie =JSON.parse(piechart);*/
-								console.log(piereslt);
+							console.log(piereslt);
 					finalJson.push({"chart1":{"dates":dates,"ambTemp":temp}}, {"chart2":{"maxO": maxObj, "minO": minObj, "maxA":maxAmb, "minA": minAmb}});
 					
 					res.render('charts',{"minObj":JSON.stringify(finalJson).replace(/\"/g, ""),"pieChart":JSON.stringify(piereslt).replace(/\"/g, "")});
-					
-					// write another function..and so on and close accordingly
-					
+										
 						}
 					});
 				}
@@ -295,12 +283,9 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 
 			});
 		}
-
-
 		connectAndSetUpMe();
 	}
 	SensorTag.discover(onDiscover);
 })
 );
 
-//io.listen(server);
