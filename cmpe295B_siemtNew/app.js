@@ -55,7 +55,7 @@ app.get("/ruleEngine",function(req,res){
 });
 
 
-app.get("/chart",function(req,res){
+app.get("/temperature",function(req,res){
 	var dates=[];
 	var temp=[];
 	var finalJson=[];
@@ -128,7 +128,146 @@ app.get("/chart",function(req,res){
 							console.log(piereslt);
 					finalJson.push({"chart1":{"dates":dates,"ambTemp":temp}}, {"chart2":{"maxO": maxObj, "minO": minObj, "maxA":maxAmb, "minA": minAmb}});
 					
-					res.render('charts',{"minObj":JSON.stringify(finalJson).replace(/\"/g, ""),"pieChart":JSON.stringify(piereslt).replace(/\"/g, "")});
+					res.render('temperatureChart',{"minObj":JSON.stringify(finalJson).replace(/\"/g, ""),"pieChart":JSON.stringify(piereslt).replace(/\"/g, "")});
+										
+						}
+					});
+				}
+
+			});
+
+		}
+	});
+
+});
+
+
+app.get("/humidity",function(req,res){
+	var dates=[];
+	var finalJson=[];
+	mongo.getSplineHumidityChartData(function(err,reslt){
+		if(err){
+			throw err;
+		}else{
+			var recs=JSON.parse(JSON.stringify(reslt));
+			console.log(reslt.length);
+
+			var date;
+			for(var k=0;k<reslt.length;k++){
+				if(reslt[k]._id!=""){
+					date = Date.parse(reslt[k]._id);
+					var humidity=[];
+					humidity[0] = date;
+					humidity[1] = reslt[k].humidity;
+					dates.push(humidity);
+				}
+
+			}
+			mongo.getHumidityMinMax(function(err,result){
+				var maxObj=[];
+				var minObj=[];
+				if(err){
+					throw err;
+				} 
+				else{
+					var recs=JSON.parse(JSON.stringify(result));
+					
+
+					var date;
+					for(var k=result.length-1;k>=0;k--){
+						if(result[k]._id!=""){
+							date = Date.parse(result[k]._id);
+							var Humidity=[];
+							var Humidity1=[];
+							Humidity[0] = date;
+							Humidity[1] = result[k].HumidityMax;
+							Humidity1[0] = date;
+							Humidity1[1] = result[k].HumidityMin;
+							maxObj.push(Humidity);
+							minObj.push(Humidity1);
+						}
+
+					}
+					
+					mongo.getPieChartHumidity(function(err,piereslt){
+						if(err){
+							throw err;
+						}else{
+							var recs=JSON.stringify(piereslt);
+							console.log("retrun from the pie chart::::"+piereslt.length);
+							console.log(piereslt);
+					finalJson.push({"chart1":{"dates":dates}}, {"chart2":{"maxO": maxObj, "minO": minObj}});
+					
+					res.render('humidityChart',{"minObj":JSON.stringify(finalJson).replace(/\"/g, ""),"pieChart":JSON.stringify(piereslt).replace(/\"/g, "")});
+										
+						}
+					});
+				}
+
+			});
+
+		}
+	});
+
+});
+
+app.get("/pressure",function(req,res){
+	var dates=[];
+	var finalJson=[];
+	mongo.getSplinePressureChartData(function(err,reslt){
+		if(err){
+			throw err;
+		}else{
+			var recs=JSON.parse(JSON.stringify(reslt));
+			console.log(reslt.length);
+
+			var date;
+			for(var k=0;k<reslt.length;k++){
+				if(reslt[k]._id!=""){
+					date = Date.parse(reslt[k]._id);
+					var Pressure=[];
+					Pressure[0] = date;
+					Pressure[1] = reslt[k].pressure;
+					dates.push(Pressure);
+				}
+
+			}
+			mongo.getPressureMinMax(function(err,result){
+				var maxObj=[];
+				var minObj=[];
+				if(err){
+					throw err;
+				} 
+				else{
+					var recs=JSON.parse(JSON.stringify(result));
+					
+
+					var date;
+					for(var k=result.length-1;k>=0;k--){
+						if(result[k]._id!=""){
+							date = Date.parse(result[k]._id);
+							var Pressure=[];
+							var Pressure1=[];
+							Pressure[0] = date;
+							Pressure[1] = result[k].PressureMax;
+							Pressure1[0] = date;
+							Pressure1[1] = result[k].PressureMin;
+							maxObj.push(Pressure);
+							minObj.push(Pressure1);
+						}
+
+					}
+					
+					mongo.getPieChartPressure(function(err,piereslt){
+						if(err){
+							throw err;
+						}else{
+							var recs=JSON.stringify(piereslt);
+							console.log("retrun from the pie chart::::"+piereslt.length);
+							console.log(piereslt);
+					finalJson.push({"chart1":{"dates":dates}}, {"chart2":{"maxO": maxObj, "minO": minObj}});
+					
+					res.render('pressureChart',{"minObj":JSON.stringify(finalJson).replace(/\"/g, ""),"pieChart":JSON.stringify(piereslt).replace(/\"/g, "")});
 										
 						}
 					});

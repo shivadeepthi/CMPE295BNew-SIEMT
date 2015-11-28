@@ -369,33 +369,33 @@
                 <div class="span3 statbox purple" onTablet="span6" onDesktop="span3">
                     <div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
                     <div class="number" id="objTemp"><i class="icon-arrow-up"></i></div>
-                    <div class="title">ObjectTemp</div>
+                    <div class="title">Temperature Analysis</div>
                     <div class="footer">
-                        <a href="/table"> read full report</a>
+                        <a href="/temperature"> Click Here</a>
                     </div>  
                 </div>
                 <div class="span3 statbox green" onTablet="span6" onDesktop="span3">
                     <div class="boxchart">1,2,6,4,0,8,2,4,5,3,1,7,5</div>
-                    <div class="number" id="ambTemp"><i class="icon-arrow-up"></i></div>
-                    <div class="title">AmbTemp</div>
+                    <div class="number" id="pressure"><i class="icon-arrow-up"></i></div>
+                    <div class="title">Pressure Analysis</div>
                     <div class="footer">
-                        <a href="#"> read full report</a>
+                        <a href="/pressure"> Click Here</a>
                     </div>
                 </div>
                 <div class="span3 statbox blue noMargin" onTablet="span6" onDesktop="span3">
                     <div class="boxchart">5,6,7,2,0,-4,-2,4,8,2,3,3,2</div>
-                    <div class="number" id="pressure"><i class="icon-arrow-up"></i></div>
-                    <div class="title">pressure</div>
+                    <div class="number" id="humidity"><i class="icon-arrow-down"></i></div>
+                    <div class="title">Humidity Analysis</div>
                     <div class="footer">
-                        <a href="#"> read full report</a>
+                        <a href="/humidity"> Click Here</a>
                     </div>
                 </div>
                 <div class="span3 statbox yellow" onTablet="span6" onDesktop="span3">
                     <div class="boxchart">7,2,2,2,1,-4,-2,4,8,,0,3,3,5</div>
                     <div class="number" id="humidity"><i class="icon-arrow-down"></i></div>
-                    <div class="title">humidity</div>
+                    <div class="title">Report</div>
                     <div class="footer">
-                        <a href="#"> read full report</a>
+                        <a href="/table"> Click Here</a>
                     </div>
                 </div>  
                 
@@ -461,18 +461,18 @@ setInterval(function(){
                     
                 </div>
                 
-                <div class="sparkLineStats span4 widget green" onTablet="span5" onDesktop="span4">
+                <div class="sparkLineStats span4 widget blue" onTablet="span5" onDesktop="span4">
 
                     <ul class="unstyled">
                         
-                        <li><a href='/chart'><span class="sparkLineStats3"></span> 
-                            Average Object temp </a>
+                        <li><a href='/temperature'><span class="sparkLineStats3"></span> 
+                            Temperature Historic Analysis </a>
                         </li>
-                        <li><a href='/chart'><span class="sparkLineStats4"></span>
-                            Average Pressure </a>
+                        <li><a href='/pressure'><span class="sparkLineStats4"></span>
+                            Pressure Historic Analysis </a>
                         </li>
-                        <li><a href='/chart'><span class="sparkLineStats5"></span>
-                            Average Humidity </a>
+                        <li><a href='/humidity'><span class="sparkLineStats5"></span>
+                            Humidity Historic Analysis </a>
                         </li>
                         <li><a href='/chart'><span class="sparkLineStats6"></span>
                             Outliars(alerts) over lasweek</a>

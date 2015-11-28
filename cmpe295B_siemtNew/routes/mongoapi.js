@@ -215,6 +215,171 @@ function getPieChartTemp(callback){
 	});
 }
 
+//humidity charts
+
+function getSplineHumidityChartData(callback){
+	console.log("getting humidity and timestamp");
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=db.collection('humidity').aggregate([{$group : {_id : { $substr: [ "$timeStamp", 0, 10] }, humidity : {$avg : "$Humidity"}}},{ $sort : { _id : 1 } }]).toArray(function(err, docs) {
+
+					callback(null,docs);
+				});	
+			}
+		});
+	});
+}
+
+function getHumidityMinMax(callback){
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=	db.collection('humidity').aggregate( [{ $match: { Humidity: {$lt: 90, $gt: 0 }}},{ $group: {_id: {$substr: ["$timeStamp", 0, 10]}, HumidityMax: { $max: "$Humidity" }, HumidityMin: { $min: "$Humidity" }} },
+				           	                                  {$sort: {_id: -1}}, {$limit:7}] ).toArray(function(err, docs){
+				           	                                	  console.log(docs.length);
+				           	                                	  console.log("Found the following in max min records");
+				           	                                	  console.log(docs);
+				           	                                	  callback(null,docs);
+
+				           	                                  });
+			}
+		});
+	});
+}
+
+
+function getPieChartHumidity(callback){
+	console.log("getting pie chart humidity and timestamp");
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=db.collection('humidity').aggregate([
+				                                            { 
+				                                            	 $project: 
+				                                            	 { 
+				                                            	 day :{ $substr: [ "$timeStamp", 8, 2]}, 
+				                                            	 lessThan10: { $cond: [ { $and: [ { $gte: [ "$Humidity", 0 ] }, { $lt: [ "$Humidity", 18 ] } ] }, 1, 0]}, 
+				                                            	 lessThan30: { $cond: [ { $and: [ { $gte: [ "$Humidity", 18 ] }, { $lt: [ "$Humidity", 30 ] } ] }, 1, 0]},
+				                                            	 lessThan60: { $cond: [ { $and: [ { $gte: [ "$Humidity", 30 ] }, { $lt: [ "$Humidity", 60 ] } ] }, 1, 0]}, 
+				                                            	 lessThan90: { $cond: [ { $and: [ { $gte: [ "$Humidity", 60 ] }, { $lt: [ "$Humidity", 90 ] } ] }, 1, 0]},
+				                                            	 lessThan120: {$cond: [ { $and: [ { $gte: [ "$Humidity", 90 ] }, { $lt: [ "$Humidity", 120 ] } ] }, 1, 0]},
+				                                            	 moreThan10: {$cond: [ { $and: [ { $gte: [ "$Humidity", 120 ] }, { $lt: [ "$Humidity", 250 ] } ] }, 1, 0]}
+				                                            	 } 
+				                                            	 },  
+				                                            	 { 
+
+				                                            	 $group: { 
+				                                            	  _id : "$day", 
+				                                            	  count10: { $sum: "$lessThan10" },
+				                                            	  count30: { $sum: "$lessThan30" }, 
+				                                            	  count60: { $sum: "$lessThan60" },
+				                                            	  count90: { $sum: "$lessThan90" },
+				                                            	  count120: { $sum: "$lessThan120" },
+				                                            	  count150: { $sum: "$moreThan10" } 
+				                                            	  } 
+				                                            	  }, {$sort: { _id : -1 }}, {$limit:1}
+				                                            	 ]).toArray(function(err, docs) {
+
+					callback(null,docs);
+				});	
+			}
+		});
+	});
+}
+
+//pressure
+
+function getSplinePressureChartData(callback){
+	console.log("getting Pressure and timestamp");
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=db.collection('pressure').aggregate([{$group : {_id : { $substr: [ "$timeStamp", 0, 10] }, pressure : {$avg : "$Pressure"}}},{ $sort : { _id : 1 } }]).toArray(function(err, docs) {
+
+					callback(null,docs);
+				});	
+			}
+		});
+	});
+}
+
+function getPressureMinMax(callback){
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=	db.collection('pressure').aggregate( [{ $match: { Pressure: {$lt: 1200, $gt: 0 }}},{ $group: {_id: {$substr: ["$timeStamp", 0, 10]}, PressureMax: { $max: "$Pressure" }, PressureMin: { $min: "$Pressure" }} },
+				           	                                  {$sort: {_id: -1}}, {$limit:7}] ).toArray(function(err, docs){
+				           	                                	  console.log(docs.length);
+				           	                                	  console.log("Found the following in max min records");
+				           	                                	  console.log(docs);
+				           	                                	  callback(null,docs);
+
+				           	                                  });
+			}
+		});
+	});
+}
+
+
+function getPieChartPressure(callback){
+	console.log("getting pie chart Pressure and timestamp");
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=db.collection('pressure').aggregate([
+				                                            { 
+				                                            	 $project: 
+				                                            	 { 
+				                                            	 day :{ $substr: [ "$timeStamp", 8, 2]}, 
+				                                            	 lessThan10: { $cond: [ { $and: [ { $gte: [ "$Pressure", 0 ] }, { $lt: [ "$Pressure", 18 ] } ] }, 1, 0]}, 
+				                                            	 lessThan30: { $cond: [ { $and: [ { $gte: [ "$Pressure", 18 ] }, { $lt: [ "$Pressure", 30 ] } ] }, 1, 0]},
+				                                            	 lessThan60: { $cond: [ { $and: [ { $gte: [ "$Pressure", 30 ] }, { $lt: [ "$Pressure", 60 ] } ] }, 1, 0]}, 
+				                                            	 lessThan90: { $cond: [ { $and: [ { $gte: [ "$Pressure", 60 ] }, { $lt: [ "$Pressure", 90 ] } ] }, 1, 0]},
+				                                            	 lessThan120: {$cond: [ { $and: [ { $gte: [ "$Pressure", 90 ] }, { $lt: [ "$Pressure", 120 ] } ] }, 1, 0]},
+				                                            	 moreThan10: {$cond: [ { $and: [ { $gte: [ "$Pressure", 120 ] }, { $lt: [ "$Pressure", 1250 ] } ] }, 1, 0]}
+				                                            	 } 
+				                                            	 },  
+				                                            	 { 
+
+				                                            	 $group: { 
+				                                            	  _id : "$day", 
+				                                            	  count10: { $sum: "$lessThan10" },
+				                                            	  count30: { $sum: "$lessThan30" }, 
+				                                            	  count60: { $sum: "$lessThan60" },
+				                                            	  count90: { $sum: "$lessThan90" },
+				                                            	  count120: { $sum: "$lessThan120" },
+				                                            	  count150: { $sum: "$moreThan10" } 
+				                                            	  } 
+				                                            	  }, {$sort: { _id : -1 }}, {$limit:1}
+				                                            	 ]).toArray(function(err, docs) {
+
+					callback(null,docs);
+				});	
+			}
+		});
+	});
+}
 
 
 function suggestTempValue(callback){
@@ -736,6 +901,12 @@ exports.getRules=getRules;
 exports.getSplineChartData=getSplineChartData;
 exports.getPieChartTemp=getPieChartTemp;
 exports.getTempMinMax=getTempMinMax;
+exports.getSplineHumidityChartData=getSplineHumidityChartData;
+exports.getPieChartHumidity=getPieChartHumidity;
+exports.getHumidityMinMax=getHumidityMinMax;
+exports.getSplinePressureChartData=getSplinePressureChartData;
+exports.getPieChartPressure=getPieChartPressure;
+exports.getPressureMinMax=getPressureMinMax;
 exports.suggestTempValue=suggestTempValue;
 exports.suggestHumdValue=suggestHumdValue;
 exports.suggestPressValue=suggestPressValue;
