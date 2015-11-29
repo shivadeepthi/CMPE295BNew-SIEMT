@@ -54,6 +54,16 @@ app.get("/ruleEngine",function(req,res){
 	res.render('RuleEngine',{"r":0});
 });
 
+app.post("/authenticate",function(req,res)
+{
+	var username= req.param.login;
+	if(username=='anshul')
+	res.render('RuleEngine',{});
+
+
+});
+
+
 
 app.get("/temperature",function(req,res){
 	var dates=[];
