@@ -440,7 +440,7 @@ app.post("/suggestedValue",function(req,res){
 });
 
 var io = require('socket.io').listen(app.listen(3000,function(){
-	console.log("We have started our server on port 3000");
+	console.log("We have started our server on port 3000")
 	// SensorTag.discover(function(tag) { and close it with }); above ondiscover mthod
 	function onDiscover(tag){
 
