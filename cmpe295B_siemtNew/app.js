@@ -14,6 +14,13 @@ var cookieParser=require('cookie-parser');
 var multer=require('multer');
 var nodemailer = require("nodemailer");
 var io=require('socket.io');
+var session = require('express-session')
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
+
+var mongoose = require('mongoose/');
+mongoose.connect('mongodb://username:password@ds045704.mongolab.com:45704/cmpe295b_siemt');
 
 
 var smtpTransport = nodemailer.createTransport("SMTP",{
@@ -31,7 +38,16 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(bodyParser());
 app.use(cookieParser());
+app.use(session({
+  cookieName: 'session',
+  secret: 'random_string_goes_here',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+}));
 app.use(express.methodOverride());
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views')));
@@ -54,14 +70,91 @@ app.get("/ruleEngine",function(req,res){
 	res.render('RuleEngine',{"r":0});
 });
 
-app.post("/authenticate",function(req,res)
-{
-	var username= req.param.login;
-	if(username=='anshul')
-	res.render('RuleEngine',{});
+// app.post("/authenticate",function(req,res)
+// {		var username= req.body.username;
+// 		var password = req.body.password;
+// 	mongo.checkUser(function(err,results){
+
+// 			if(err)
+// 				throw err;
+// 			else return;
+
+				
 
 
+
+
+// 	},username,password);
+// 	console.log(username);
+// 	res.render('RuleEngine',{});
+	
+	
+	 	
+
+
+// });
+
+app.post('/authenticate',
+  passport.authenticate('local', {
+    successRedirect: '/loginSuccess',
+    failureRedirect: '/loginFailure',
+    failureFlash:true
+  })
+);
+
+app.get('/loginFailure', function(req, res, next) {
+  res.render('Index');
 });
+
+app.get('/loginSuccess', function(req, res, next) {
+  res.render('RuleEngine');
+});
+
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+passport.authenticate('local', { failureFlash: 'Invalid username or password.' });
+passport.use(new LocalStrategy(function(username, password, done) {
+  process.nextTick(function() {
+    // Auth Check Logic
+  });
+}));
+
+var Schema = mongoose.Schema;
+var UserDetail = new Schema({
+      username: String,
+      password: String
+    }, {
+      collection: 'userInfo'
+    });
+var UserDetails = mongoose.model('userInfo', UserDetail);
+passport.use(new LocalStrategy(function(username, password, done) {
+  process.nextTick(function() {
+    UserDetails.findOne({
+      'username': username, 
+    }, function(err, user) {
+      if (err) {
+        return done(err);
+      }
+
+      if (!user) {
+        return done(null, false);
+      }
+
+      if (user.password != password) {
+        return done(null, false);
+      }
+
+      return done(null, user);
+    });
+  });
+}));
+
 
 
 
