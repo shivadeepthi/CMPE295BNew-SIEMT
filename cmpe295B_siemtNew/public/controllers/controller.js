@@ -9,8 +9,6 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.datapoint = "";
   });
 
-
-
 };
 
 refresh();
@@ -21,8 +19,11 @@ $scope.checkOptions = function() {
 
   $http.post('/getValueOption', $scope.formData).success(function(response) {
     console.log(response);
+
     $scope.datalist = response;
     $scope.datapoint = "";
+
+
   });
  
 
