@@ -396,62 +396,33 @@ app.get("/getValue",function(req,res){
 
 });
 
+app.get("/suggestedValueTemp",function(req,response){
+    mongo.suggestTempValue(function(err,result){
+          response.json(result);       
+    });
 
-
-app.post("/suggestedValue",function(req,res){
-	var dp=req.body.datapoint;
-	console.log("In post  "+dp);
-	if(dp=="Temperature"){
-		mongo.suggestTempValue(function(err,result){
-			if(err){
-				throw err;
-			}else{
-				var r=result;
-				console.log("average temp  "+r);
-				mongo.insertPredictedValue(function(err,resl){
-					if(err){
-						throw err;
-					}else{
-						console.log("r"+r);
-						res.setHeader('Content-Type','application/json');
-						res.send(JSON.stringify({rsl:r}));
-
-					}
-				},dp,r);
-			}
-		});
-	}else if(dp=="Humidity"){
-		mongo.suggestHumdValue(function(err,result){
-			if(err){
-				throw err;
-			}else{
-				console.log("average humid  "+result);
-				mongo.insertPredictedValue(function(err,resl){
-					if(err){
-						throw err;
-					}else{
-						console.log("resl"+resl);
-					}
-				},dp,result);
-			}
-		});
-	}else if(dp=="Pressure"){
-		mongo.suggestPressValue(function(err,result){
-			if(err){
-				throw err;
-			}else{
-				console.log("average Press  "+result);
-				mongo.insertPredictedValue(function(err,resl){
-					if(err){
-						throw err;
-					}else{
-						console.log("resl"+resl);
-					}
-				},dp,result);
-			}
-		});
-	}
 });
+
+app.get("/suggestedValuePress",function(req,response){
+    mongo.suggestPressValue(function(err,result){
+            response.json(result);
+       
+    });
+
+});
+
+app.get("/suggestedValueHumd",function(req,response){
+    mongo.suggestHumdValue(function(err,result){
+            response.json(result);
+    });
+});
+app.get("/suggestedValueAmpTemp",function(req,response){
+	console.log("Reached here");
+    mongo.suggestAmbTempValue(function(err,result){
+            response.json(result);
+    });
+});
+
 
 var io = require('socket.io').listen(app.listen(3000,function(){
 	console.log("We have started our server on port 3000")
