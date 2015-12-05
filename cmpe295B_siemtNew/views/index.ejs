@@ -57,16 +57,39 @@
                 type: "POST",
                 contentType: "application/json" } );
             }); 
-				socket.on('Accelero', function(data) {
-                $('#accerlero').html(parseInt(data.acc));
-                console.log(data.acc);
-                $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Accelero?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
-                data: JSON.stringify( { "SensorId" : data.sensorId,
-                						"Accelero":data.acc,
-                                        "timeStamp":new Date()} ),
-                type: "POST",
-                contentType: "application/json" } );
-            }); 
+				// socket.on('Accelero', function(data) {                
+				// $('#accerleroX').html(parseInt(data.acc));
+    //             $('#accerleroY').html(parseInt(data.ler));
+    //             $('#accerleroZ').html(parseInt(data.met));
+    //             console.log(data.acc);
+    //             $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Accelero?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
+    //             data: JSON.stringify( { "SensorId" : data.sensorId,
+    //             						"AcceleroX":data.acc,
+    //                                     "AcceleroY":data.ler,
+    //                                     "AcceleroZ":data.met,
+    //                                     "timeStamp":new Date()} ),
+    //             type: "POST",
+    //             contentType: "application/json" } );
+    //         }); 
+
+    //              socket.on('Magneto', function(data) {
+    //             $('#magX').html(parseInt(data.magX));
+    //             $('#magY').html(parseInt(data.magY));
+    //             $('#magZ').html(parseInt(data.magZ));
+    //             console.log(data.magX);
+    //             console.log(data.magY);
+    //             console.log(data.magZ);
+    //             console.log("I am here in Magenato");
+    //             $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Magneto?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
+    //             data: JSON.stringify( { "SensorId" : data.sensorId,
+    //                                     "MagX":data.magX,
+    //                                     "MagY":data.magY,
+    //                                     "MagZ":data.magZ,
+    //                                     "timeStamp":new Date()} ),
+    //             type: "POST",
+    //             contentType: "application/json" } );
+    //         }); 
+
                socket.on('Pressure', function(data) {
                 $('#pressure').html(parseInt(data.press));
                 $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/pressure?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
@@ -93,7 +116,8 @@
         socket.on('Pressure', function(data) {
             press=data.press;
         });
-    var gaugeOptions = {
+        
+        var gaugeOptions = {
         chart: {
             type: 'solidgauge'
         },
@@ -417,9 +441,9 @@
 
             <div class="row-fluid">
                 
-                <div class="span8" onTablet="span7" onDesktop="span8">
+                <div class="span12" onTablet="span7" onDesktop="span12">
                     
-                    <div id="chart"  style="height:282px" ></div>
+                    <div id="chart"  style="height:400px" ></div>
                     <script>
                         var pubnub = PUBNUB.init({
                          publish_key: 'demo',
@@ -438,71 +462,47 @@
                                     }
                                      }
                                     });
-</script>
+                        </script>
 
-<script>
- var socket = io.connect('//localhost:3000');
-    var objTemp="";
-    var ambTemp="";
-    var humid="";
-    var press="";
-    socket.on('objTemp', function(data) {
-    objTemp=data.objTemp;
-    ambTemp=data.ambTemp;
-    });
-    socket.on('humTemp', function(data) {
-    humid=data.humidity;
-    });
-    socket.on('Pressure', function(data) {
-    press=data.press;
-    });
-setInterval(function(){
+                        <script>
+                         var socket = io.connect('//localhost:3000');
+                            var objTemp="";
+                            var ambTemp="";
+                            var humid="";
+                            var press="";
+                            socket.on('objTemp', function(data) {
+                            objTemp=data.objTemp;
+                            ambTemp=data.ambTemp;
+                            });
+                            socket.on('humTemp', function(data) {
+                            humid=data.humidity;
+                            });
+                            socket.on('Pressure', function(data) {
+                            press=data.press;
+                            });
+                        setInterval(function(){
 
-  pubnub.publish({
-    channel: channel,
-    message: {
-      eon: {
-        'Temperature': parseInt(objTemp),
-        'Pressure': parseInt(press),
-        'AmbTemp': parseInt(ambTemp),
-        'Humidity': parseInt(humid)
-      }
-    }
-  });
+                          pubnub.publish({
+                            channel: channel,
+                            message: {
+                              eon: {
+                                'Temperature': parseInt(objTemp),
+                                'Pressure': parseInt(press),
+                                'AmbTemp': parseInt(ambTemp),
+                                'Humidity': parseInt(humid)
+                              }
+                            }
+                          });
 
-}, 1000);
-</script>
-                    
-                </div>
-                
-                <div class="sparkLineStats span4 widget blue" onTablet="span5" onDesktop="span4">
-
-                    <ul class="unstyled">
-                        
-                        <li><a href='/temperature'><span class="sparkLineStats3"></span> 
-                            Temperature Historic Analysis </a>
-                        </li>
-                        <li><a href='/pressure'><span class="sparkLineStats4"></span>
-                            Pressure Historic Analysis </a>
-                        </li>
-                        <li><a href='/humidity'><span class="sparkLineStats5"></span>
-                            Humidity Historic Analysis </a>
-                        </li>
-                        <li><a href='/'><span class="sparkLineStats6"></span>
-                            Reports</a>
-                        </li>
-                        <li><a href='/'><span class="sparkLineStats7"></span>
-                            Rules </a>
-                        </li>
-                    </ul>
-                    
-                    <div class="clearfix"></div>
-
-                </div><!-- End .sparkStats -->
-
+                        }, 1000);
+                        </script>
+                                            
+                </div>             
             </div>
-            
-            <div class="row-fluid hideInIE8 circleStats">
+
+
+
+                 <div class="row-fluid hideInIE8 circleStats">
                 
                 <div class="span4" onTablet="span8" onDesktop="span4">
                     <div class="circleStatsItemBox yellow">
@@ -529,7 +529,135 @@ setInterval(function(){
                     </div>
                 </div>
                         
-            </div>      
+            </div> 
+
+
+                <div class="row-fluid">
+                
+                <div class="span6" onTablet="span7" onDesktop="span6">
+                    <div id="chart1"  style="height:282px" ></div>
+                    <script>
+                              var pubnubNew = PUBNUB.init({
+                                publish_key: 'demo',
+                                subscribe_key: 'demo'
+                              });
+                              var channelNew = "c3-spline" + Math.random();
+                              eon.chart({
+                                pubnub: pubnubNew,
+                                channel: channelNew,
+                                history: true,
+                                debug: true,
+                                generate: {
+                                  bindto: '#chart1',
+                                  data: {
+                                    labels: true,
+                                    type: 'bar'
+                                  },
+                                  bar: {
+                                    width: {
+                                      ratio: 0.5
+                                    }
+                                  }
+                                }
+                              });
+                            </script>
+
+                        <script>
+                         var socket = io.connect('//localhost:3000');
+                            var accx="";
+                            var accy="";
+                            var accz="";
+                            
+                            socket.on('Accelero', function(data) {
+                            accx=data.acc;
+                            accy=data.ler;
+                            accz=data.met;
+
+                            });
+                            
+                        setInterval(function(){
+
+                          pubnub.publish({
+                            channel: channelNew,
+                            message: {
+                              eon: {
+                                'AcceleroX': parseInt(accx),
+                                'AcceleroY': parseInt(accy),
+                                'AcceleroZ': parseInt(accz),
+                                
+                              }
+                            }
+                          });
+
+                        }, 700);
+                        </script>
+                    
+                </div> 
+            
+                
+                <div class="span6" onTablet="span7" onDesktop="span6">
+                    <div id="chart2"  style="height:282px" ></div>
+                    <script>
+                              var pubnubNew1 = PUBNUB.init({
+                                publish_key: 'demo',
+                                subscribe_key: 'demo'
+                              });
+                              var channelNew1 = "c3-spline" + Math.random();
+                              eon.chart({
+                                pubnub: pubnubNew1,
+                                channel: channelNew1,
+                                history: true,
+                                debug: true,
+                                generate: {
+                                  bindto: '#chart2',
+                                  data: {
+                                    labels: true,
+                                    type: 'bar'
+                                  },
+                                  bar: {
+                                    width: {
+                                      ratio: 0.5
+                                    }
+                                  }
+                                }
+                              });
+                            </script>
+
+                        <script>
+                         var socket = io.connect('//localhost:3000');
+                            var magx="";
+                            var magy="";
+                            var magz="";
+                            
+                            socket.on('Magneto', function(data) {
+                            magx=data.magX;
+                            magy=data.magY;
+                            magz=data.magZ;
+
+                            });
+                            
+                        setInterval(function(){
+
+                          pubnub.publish({
+                            channel: channelNew1,
+                            message: {
+                              eon: {
+                                'MagX': parseInt(magx),
+                                'MagY': parseInt(magy),
+                                'MagZ': parseInt(magz),
+                                
+                              }
+                            }
+                          });
+
+                        }, 700);
+                        </script>
+                    
+                </div> 
+            </div> 
+
+            
+                
     </div><!--/.fluid-container-->
     
             <!-- end: Content -->
