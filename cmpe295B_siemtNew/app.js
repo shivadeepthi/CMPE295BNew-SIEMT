@@ -482,29 +482,34 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 			tag.enableHumidity(notifyHumd);
 			tag.enableBarometricPressure(notifyPress);
 			tag.enableAccelerometer(notifyAccel);
+			tag.enableMagnetometer(notifyMagneto);
 		}	
 
 		function notifyMe(){
-			console.log("notifying temp datapoints");
+			
 			tag.notifyIrTemperature(listenForReading);
 		}
 		function notifyHumd(){
-			console.log("notifying humd datapoints");
+			
 			tag.notifyHumidity(listenForHumdReading);
 		}
 		function notifyPress(){
-			console.log("notify pressure");
+			
 			tag.notifyBarometricPressure(listenForPress);
 		}
 		function notifyAccel(){
-			console.log("notify Accerlerometer");
+			
 			tag.notifyAccelerometer(listenForAcc);
+		}
+		function notifyMagneto(){
+			
+			tag.notifyMagnetometer(listenForMagneto);
 		}
 
 		function  listenForReading(){		
 			tag.on('irTemperatureChange', function(objectTemp, ambientTemp) {
 
-				console.log('\tObject Temp = %d deg. C', objectTemp.toFixed(1));
+				//console.log('\tObject Temp = %d deg. C', objectTemp.toFixed(1));
 				function TempChange() {
 					io.sockets.emit('objTemp', { sensorId:tag.id, objTemp: objectTemp, ambTemp: ambientTemp});
 				};
@@ -515,7 +520,7 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 
 		function  listenForHumdReading(){
 			tag.on('humidityChange', function(temperature, humidity){
-
+				//console.log('\thumidity = %d', humidity.toFixed(1));
 				function HumdChange() {
 					io.sockets.emit('humTemp', { sensorId:tag.id,humTemp: temperature,humidity: humidity });
 
@@ -527,7 +532,7 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 
 		function  listenForPress(){
 			tag.on('barometricPressureChange', function(pressure){
-				console.log('\tpressure = %d', pressure.toFixed(1));
+				//console.log('\tpressure = %d', pressure.toFixed(1));
 				function PressChange() {
 					io.sockets.emit('Pressure', {sensorId:tag.id, press: pressure }); 	
 				};
@@ -536,16 +541,33 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 			});
 		}
 		function  listenForAcc(){
+			
 			tag.on('accelerometerChange', function(x,y,z){
-
+				console.log('\Accx = %d', x.toFixed(1));
+				console.log('\AccY = %d', y.toFixed(1));
+				console.log('\AccZ = %d', z.toFixed(1));
 				function AccChange() {
 					io.sockets.emit('Accelero', { sensorId:tag.id,acc: x, ler: y, met:z });
-
 				};
 				AccChange();
 
 			});
 		}
+
+		function  listenForMagneto(){
+			
+			tag.on('magnetometerChange', function(x,y,z){
+				console.log('\tMccx = %d', x.toFixed(1));
+				console.log('\tMccY = %d', y.toFixed(1));
+				console.log('\tMccZ = %d', z.toFixed(1));
+				function MegnatoChange() {
+					io.sockets.emit('Magneto', { sensorId:tag.id,magX: x, magY: y, magZ:z });
+				};
+				MegnatoChange();
+
+			});
+		}
+
 		connectAndSetUpMe();
 	}
 	SensorTag.discover(onDiscover);
