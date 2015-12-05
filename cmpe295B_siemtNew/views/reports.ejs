@@ -144,11 +144,13 @@
 											<table class = "table">
 											<thead>
 											<tr>
+												<th> Time
 											<th> Object Temperature </th>
 											<th> Ambient Temperature</th>
 											</thead>
 											<tbody>
 												<tr ng-repeat="datapoint in datalist">
+													<td> {{datapoint.timeStamp}}</td>
 										          <td>{{datapoint.ObjectTemp}}</td>
 										          <td>{{datapoint.AmbientTemp}}</td>
 										         

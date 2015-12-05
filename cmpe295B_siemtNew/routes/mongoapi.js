@@ -579,7 +579,7 @@ function getTemperatureOfDay(callback){
 				var cursor=
 db.collection('temp').find(
     { "timeStamp": {$gte: new Date('11/07/2015')} },
-    {  _id: 0,timeStamp:0 }
+    {  _id: 0}
 ).toArray(function(err, docs) {
 
 					callback(null,docs);
