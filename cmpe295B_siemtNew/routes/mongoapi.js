@@ -437,6 +437,31 @@ function suggestTempValue(callback){
 	});
 }
 
+function suggestAmbTempValue(callback){
+	console.log("getting the recommended value for objtemp");
+	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
+	db.open(function(err, db) {
+		db.authenticate('username','password',function(err){
+			if(err){
+				throw err;
+			}else{
+				var cursor=db.collection('temp').aggregate([{$group : {_id : { $substr: [ "$timeStamp", 0, 10] }, objTemp : {$avg : "$AmbientTemp"}}},{ $sort : { _id : -1 } },{$limit:5}]).toArray(function(err,docs){ 
+					var sumTemp=0;
+					var objTempRecommndedvalu=0;
+					for(var j=0;j<docs.length;j++){
+						console.log(docs[j].objTemp);
+						sumTemp=sumTemp+(docs[j].objTemp);
+						console.log(sumTemp);
+					}
+					objTempRecommndedvalu=sumTemp/(docs.length);
+					console.log("avg"+objTempRecommndedvalu);
+					callback(null,objTempRecommndedvalu);
+				});
+			}
+		});
+	});
+}
+
 function suggestHumdValue(callback){
 	console.log("getting the recommended value for humid");
 	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
@@ -613,3 +638,4 @@ exports.suggestHumdValue=suggestHumdValue;
 exports.suggestPressValue=suggestPressValue;
 exports.insertPredictedValue=insertPredictedValue;
 exports.getTemperatureOfDay=getTemperatureOfDay
+exports.suggestAmbTempValue=suggestAmbTempValue

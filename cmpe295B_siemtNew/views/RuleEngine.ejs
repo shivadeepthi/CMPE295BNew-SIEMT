@@ -206,7 +206,7 @@
                                     <option>shut down system</option>
     </select>
     </div>
-    <button type="submit" class="btn btn-default" id="AddRule">Add Rule</button>
+    <button type="submit" class="btn btn-default" id="addrule">Add Rule</button>
     <button type="submit" class="btn btn-default" id="suggestValue">Suggest a Value</button>
   </form>
                 </div>     
@@ -241,7 +241,7 @@
 $(document).ready(function() {
     var add_button      = $("#addrule"); //Add button ID
     var wrapper= $("#input_fields_wrap"); //Fields wrapper
-    var suggestvalue    =$("#suggestValue");
+    var suggestvalue = $("#suggestValue");
     
     $(add_button).click(function(e){ //on add input button click
         e.preventDefault();
@@ -317,61 +317,72 @@ $(document).ready(function() {
            $(this).parents('tr').remove();  
     });
 
-   });
   
-  $('#suggestValue').click(function(){
-    
-         var datapoint=document.getElementById('criteria').value;
-         var criteriaVal=document.getElementById('condi').value;
-        var datapoint_val=document.getElementById('rulevalue').value;
-        var trigger_action=document.getElementById('actionvalue').value; 
- 
-             $.ajax({
-             url: "/suggestedValue",
-             data: JSON.stringify( { "datapoint":datapoint} ),
-             type: "POST",
-             contentType: "application/json",
+  
+      
+      suggestvalue.click(function (e) {
+        var datapoint = document.getElementById('criteria').value;
+        console.log(datapoint);
+        var criteriaVal = document.getElementById('condi').value;
+        var datapoint_val = document.getElementById('rulevalue').value;
+        var trigger_action = document.getElementById('actionvalue').value;
 
-             success:function(data){
-                 console.log(JSON.stringify(data));
-                 alert("succes");    
-             },
-             error:function (xhr, status, err) { 
-                 alert("error"+err.message);
-             }
-                 });
-
+        if(datapoint=="Temperature"){
+        $.ajax({
+            url: "/suggestedValueTemp",
+            type: 'GET',
+            success: function (data) {
+             $('#rulevalue').val(parseInt(data));
+               
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+        }
+        else if(datapoint=="Pressure"){
             $.ajax({
-                 });
+            url: "/suggestedValuePress",
+            type: 'GET',
+            success: function (data) {
+             $('#rulevalue').val(parseInt(data));
+               
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+        }
+        else if(datapoint=="Humidity"){
+            $.ajax({
+            url: "/suggestedValueHumd",
+            type: 'GET',
+            success: function (data) {
+             $('#rulevalue').val(parseInt(data));
+               
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+        }
+        else if(datapoint=="AmbientTemp"){
+            $.ajax({
+            url: "/suggestedValueAmpTemp",
+            type: 'GET',
+            success: function (data) {
+             $('#rulevalue').val(parseInt(data));
+                console.log("inside success::",data);
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+        }
+        return false;
+    });
+ });
 
-             $.ajax({
-            url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/predictionValues?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
-             type: 'GET',
-             dataType:'json',
-             success: function(data) {
-                     var str=JSON.stringify(data);
-                     alert("success in prediction value"+str);
-                     var obj=JSON.parse(str);
-                         if(datapoint=="Temperature"){
-                             alert(obj[0].Temperature);
-                             document.getElementById("rulevalue").value=obj[0].Temperature;
-                             document.getElementById("datapoint").value="Temperature";
-                         }else if(datapoint=="Pressure"){
-                             alert(obj[0].pressure);
-                             document.getElementById("rulevalue").value=obj[0].pressure;
-                             document.getElementById("datapoint").value="Pressure";
-                         }else if(datapoint=="Humidity"){
-                             alert(obj[0].Humidity);
-                             document.getElementById("rulevalue").value=obj[0].Humidity;
-                             document.getElementById("datapoint").value="Humidity";
-                         }
-                                      },
-             error: function(e) {
-             console.log(e.message);
-             }
-             });  
-        
-     });
 </script>
 
 
