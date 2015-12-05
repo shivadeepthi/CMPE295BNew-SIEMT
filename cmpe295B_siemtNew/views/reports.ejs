@@ -26,8 +26,92 @@
 	    <script src='http://localhost:3000/socket.io/socket.io.js'></script>
 	    <script type="text/javascript" src="http://pubnub.github.io/eon/v/eon/0.0.9/eon.js"></script>
 	    <link type="text/css" rel="stylesheet" href="http://pubnub.github.io/eon/v/eon/0.0.9/eon.css" />
+		<script type="text/javascript">
+
+			$(document).ready(function() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+
+    var today = year + "-" + month + "-" + day;       
+    $("#theDate").attr("value", today);
+});
+
+
+
+		</script>
+		<script type="text/javascript">
 		
+		$(document).ready(function(){
+			console.log('hello');
+			$("#temp").hide();
+			 $("#pressure").hide();
+			  $("#humidity").hide();
+
+			  $('#drop').on('change', function () {
+				  var result = $(this).val();
+        			
+    if(result === "temp"){
+        $("#temp").show();
+         $("#pressure").hide();
+         $("#humidity").hide();
+
+    } 
+    else if(result === "pressure"){
+        $("#pressure").show();
+        $("#temp").hide();
+        $("#humidity").hide();
+
+    } 
+    
+       else {
+		 $("#humidity").show(); 
+		 $("#temp").hide();
+		  $("#pressure").hide();
+
+		 }    
+ 
+});
+
+			
+		});
+
+	
+
+
+
+
+
+
+
+
+
+// 		 $('#parameter').change( function () {
+// 		 	alert("hello");
+// 			var result = $(this).find('option:selected').val();
+// 				 	alert(result);
+
+//     if(result === "temp"){
+//         $("#temp").show();
+//     } 
+//     if(result === "pressure"){
+//         $("#pressure").show();
+//     } 
+//     if(result=== "humidity"){
+//         $("#humidity").show();
+//     } 
+// });
+
 		
+
+
+		
+		</script>
+
 			
 	</head>
 
@@ -121,32 +205,53 @@
 							<h2><i class="halflings-icon list-alt"></i><span class="break"></span></h2>
 						</div>
 						<div class="box-content">
-							<div id="container1"  class="center" style="height:800px;" >
+							<div id="container1" ng-controller="AppCtrl" class="center" style="height:800px;" >
 
 									
-
-											<form action="#" method="post">
+											<div class ="container" id="form">
+											<form>
 											  
-											  <div class="dropdown">
 											
-											<select name = "parameter">
-											  <option value="Temperature">Temperature</option>
-											  <option value="Pressure">Pressure</option>
-											  <option value="Humidity">Humidity</option>
-											</select>	
-
-											  <input type="date" name="date" id="theDate">
-											  <input type="submit" value="Get data" class="btn btn-info">
-											  	</div>
+											<select id="drop" name = "parameter" ng-model="formData.option">
+											  <option value="temp" ng-model="formData.temp">Temperature</option>
+											  <option value="pressure" ng-model="formData.pressure">Pressure</option>
+											  <option value="humidity" ng-model="formData.humidity">Humidity</option>
+											</select>
+										
+											 	<div>
+											  <input type="date" name="date" id="theDate" ng-model="formData.date">
+											  <input type="button" value="Get data" class="btn btn-info" ng-click="checkOptions()">
+											  </div>
 											  
 											</form>
-											<div class = "container" ng-controller="AppCtrl">
+											</div>
+											<div class="drop-down-show-hide"  id="pressure">
 											<table class = "table">
 											<thead>
 											<tr>
 												<th> Time
+											<th> Pressure </th>
+											
+											</thead>
+											<tbody>
+												<tr ng-repeat="datapoint in datalist">
+													<td> {{datapoint.timeStamp}}</td>
+										          <td>{{datapoint.Pressure}}</td>
+										          <!-- <td>{{datapoint.AmbientTemp}}</td> -->
+										         
+										        </tr>	
+
+
+											</tbody>
+											</table> 
+										</div>
+											<div class="drop-down-show-hide" id="temp">
+											<table class = "table" >
+											<thead>
+											<tr>
+												<th> Time </th>
 											<th> Object Temperature </th>
-											<th> Ambient Temperature</th>
+											<th> Ambient Temperature </th>
 											</thead>
 											<tbody>
 												<tr ng-repeat="datapoint in datalist">
@@ -159,20 +264,30 @@
 
 											</tbody>
 											</table> 
+										</div>
+
+										<div class="drop-down-show-hide" id="humidity">
+										<table class = "table" >
+											<thead>
+											<tr>
+												<th> Time
+											<th> Humidity </th>
+											
+											</thead>
+											<tbody>
+												<tr ng-repeat="datapoint in datalist">
+													<td> {{datapoint.timeStamp}}</td>
+										          <td>{{datapoint.Humidity}}</td>
+										         
+										        </tr>	
 
 
-									
+											</tbody>
+											</table> 		
+										</div>
 
 
-
-
-
-
-
-
-
-
-
+											
 
 							</div>
 							
@@ -226,27 +341,9 @@
 		
 		<!-- start: JavaScript-->
 
-		<script type="text/javascript">
 
-			$(document).ready(function() {
-    var date = new Date();
+			<script src="js/jquery-1.10.1.min.js"></script> 
 
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-
-    if (month < 10) month = "0" + month;
-    if (day < 10) day = "0" + day;
-
-    var today = year + "-" + month + "-" + day;       
-    $("#theDate").attr("value", today);
-});
-
-
-
-		</script>
-
-			<script src="js/jquery-1.9.1.min.js"></script>
 		<script src="js/jquery-migrate-1.0.0.min.js"></script>
 		
 			<script src="js/jquery-ui-1.10.0.custom.min.js"></script>

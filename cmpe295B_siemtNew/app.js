@@ -375,9 +375,45 @@ app.get("/reports",function(req,res){
 	res.render('reports');
 });
 
-app.get("/getValue",function(req,res){
+// app.get("/getValue",function(req,res){
 
 	
+
+// 		mongo.getTemperatureOfDay(function(err,reslt){
+// 		if(err){
+// 			throw err;
+// 		}else{
+// 			var recs=JSON.parse(JSON.stringify(reslt));
+// 			console.log(recs.length);
+			
+// 			console.log(recs);
+// 		}
+
+// 		res.json(recs);
+// 	});
+
+// // 	
+
+// });
+
+
+app.post('/checkOptions', function (req, res) {
+  console.log(req.body.option);
+  		if(req.body.option=='Temperature')
+  		{}
+
+
+
+  // db.contactlist.insert(req.body, function(err, doc) {
+  //   res.json(doc);
+  // });
+});
+
+
+app.post("/getValueOption",function(req,res){
+		var options =req.body.option;
+		var date =req.body.date;
+		console.log("inside post"+req.body.date);
 
 		mongo.getTemperatureOfDay(function(err,reslt){
 		if(err){
@@ -390,7 +426,7 @@ app.get("/getValue",function(req,res){
 		}
 
 		res.json(recs);
-	});
+	},options,date);
 
 // 	
 
