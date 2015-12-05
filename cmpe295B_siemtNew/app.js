@@ -5,6 +5,7 @@ var http = require('http');
 var express = require('express');
 var app = module.exports.app = express();
 var port=3000;
+var db;
 var SensorTag = require('sensortag');
 var path = require('path');
 var fs = require('fs');
@@ -18,10 +19,18 @@ var session = require('express-session')
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
+var mongodb = require('mongodb');
+
 
 var mongoose = require('mongoose/');
 mongoose.connect('mongodb://username:password@ds045704.mongolab.com:45704/cmpe295b_siemt');
 
+
+
+db = new mongodb.Db('cmpe295b_siemt', new mongodb.Server(
+			'ds045704.mongolab.com', 45704, {
+				auto_reconnect : true
+			}));
 
 var smtpTransport = nodemailer.createTransport("SMTP",{
 	service: "Gmail",
@@ -70,29 +79,7 @@ app.get("/ruleEngine",function(req,res){
 	res.render('RuleEngine',{"r":0});
 });
 
-// app.post("/authenticate",function(req,res)
-// {		var username= req.body.username;
-// 		var password = req.body.password;
-// 	mongo.checkUser(function(err,results){
 
-// 			if(err)
-// 				throw err;
-// 			else return;
-
-				
-
-
-
-
-// 	},username,password);
-// 	console.log(username);
-// 	res.render('RuleEngine',{});
-	
-	
-	 	
-
-
-// });
 
 app.post('/authenticate',
   passport.authenticate('local', {
@@ -382,6 +369,33 @@ app.get("/pressure",function(req,res){
 	});
 
 });
+
+app.get("/reports",function(req,res){
+
+	res.render('reports');
+});
+
+app.get("/getValue",function(req,res){
+
+	
+
+		mongo.getTemperatureOfDay(function(err,reslt){
+		if(err){
+			throw err;
+		}else{
+			var recs=JSON.parse(JSON.stringify(reslt));
+			console.log(recs.length);
+			
+			console.log(recs);
+		}
+
+		res.json(recs);
+	});
+
+// 	
+
+});
+
 
 
 app.post("/suggestedValue",function(req,res){
