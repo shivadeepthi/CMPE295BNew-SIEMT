@@ -543,9 +543,9 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 		function  listenForAcc(){
 			
 			tag.on('accelerometerChange', function(x,y,z){
-				console.log('\Accx = %d', x.toFixed(1));
-				console.log('\AccY = %d', y.toFixed(1));
-				console.log('\AccZ = %d', z.toFixed(1));
+				console.log('\tAccx = %d', x.toFixed(1));
+				console.log('\tAccY = %d', y.toFixed(1));
+				console.log('\tAccZ = %d', z.toFixed(1));
 				function AccChange() {
 					io.sockets.emit('Accelero', { sensorId:tag.id,acc: x, ler: y, met:z });
 				};
