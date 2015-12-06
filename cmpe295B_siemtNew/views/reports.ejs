@@ -1,0 +1,413 @@
+	<!DOCTYPE html>
+	<html lang="en" ng-app="myApp">
+	<head>
+		
+		<!-- start: Meta -->
+		<meta charset="utf-8">
+		<title>Humidity Charts</title>
+		<meta name="description" content="Humidity Charts">
+		<meta name="author" content="CMPE295B SIEMT">
+		<meta name="keyword" content="Dashboard, Bootstrap, Admin, Theme, Responsive, Fluid, Retina">
+		<!-- end: Meta -->
+		
+		<!-- start: Mobile Specific -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- end: Mobile Specific -->
+		
+		<!-- start: CSS -->
+		<link id="bootstrap-style" href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+		<link id="base-style" href="css/style.css" rel="stylesheet">
+		<link id="base-style-responsive" href="css/style-responsive.css" rel="stylesheet">
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
+		
+
+		<!-- end: CSS -->
+		 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	    <!-- end: CSS -->
+	    <script src='/socket.io/socket.io.js'></script>
+	    <script type="text/javascript" src="http://pubnub.github.io/eon/v/eon/0.0.9/eon.js"></script>
+	    <link type="text/css" rel="stylesheet" href="http://pubnub.github.io/eon/v/eon/0.0.9/eon.css" />
+
+	    	<style> 
+	    		#content {
+    overflow: scroll;
+					}
+	    	</style>
+
+
+		<script type="text/javascript">
+
+	$(document).ready(function() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+
+    var today = year + "-" + month + "-" + day;       
+    $("#theDate").attr("value", today);
+});
+
+
+
+		</script>
+		
+		<script type="text/javascript">
+
+			function demoFromHTML() {
+    var pdf = new jsPDF('p', 'pt', 'letter');
+   var option = document.getElementById('drop').value;
+    var finalSource="#"+option;
+    source = $(finalSource)[0];
+
+    // we support special element handlers. Register them with jQuery-style 
+    // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+    // There is no support for any other type of selectors 
+    // (class, of compound) at this time.
+    specialElementHandlers = {
+        // element with id of "bypass" - jQuery style selector
+        '#bypassme': function (element, renderer) {
+            // true = "handled elsewhere, bypass text extraction"
+            return true
+        }
+    };
+    margins = {
+        top: 80,
+        bottom: 60,
+        left: 40,
+        width: 522
+    };
+    // all coords and widths are in jsPDF instance's declared units
+    // 'inches' in this case
+    pdf.fromHTML(
+    source, // HTML string or DOM elem ref.
+    margins.left, // x coord
+    margins.top, { // y coord
+        'width': margins.width, // max width of content on PDF
+        'elementHandlers': specialElementHandlers
+    },
+
+    function (dispose) {
+        // dispose: object with X, Y of the last line add to the PDF 
+        //          this allow the insertion of new lines after html
+        pdf.save(option+'_report.pdf');
+    }, margins);
+}
+
+
+
+		
+		</script>
+		
+		
+			
+	</head>
+
+	<body>
+			<!-- start: Header -->
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="/"><span>SIEMT</span></a>
+									
+					<!-- start: Header Menu -->
+					<div class="nav-no-collapse header-nav">
+						<ul class="nav pull-right">
+							<!-- start: User Dropdown -->
+							<li class="dropdown">
+								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+									<i class="halflings-icon white user"></i> ..
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li class="dropdown-menu-title">
+	 									<span>Account Settings</span>
+									</li>
+									<li><a href="#"><i class="halflings-icon user"></i> Profile</a></li>
+									<li><a href="login.html"><i class="halflings-icon off"></i> Logout</a></li>
+								</ul>
+							</li>
+							<!-- end: User Dropdown -->
+						</ul>
+					</div>
+					<!-- end: Header Menu -->
+					
+				</div>
+			</div>
+		</div>
+		<!-- start: Header -->
+		
+			<div class="container-fluid-full">
+			<div class="row-fluid">
+					
+				<!-- start: Main Menu -->
+				<div id="sidebar-left" class="span2">
+					<div class="nav-collapse sidebar-nav">
+						<ul class="nav nav-tabs nav-stacked main-menu">
+							<li><a href=/><i class="icon-bar-chart"></i><span class="hidden-tablet"> Dashboard</span></a></li>	
+							<li>
+							<a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> Historic Analysis</span></a>
+							<ul>
+								<li><a class="submenu" href=/temperature><i class="icon-file-alt"></i><span class="hidden-tablet"> Temperature</span></a></li>
+								<li><a class="submenu" href=/humidity><i class="icon-file-alt"></i><span class="hidden-tablet"> Humidity</span></a></li>
+								<li><a class="submenu" href=/pressure><i class="icon-file-alt"></i><span class="hidden-tablet"> Pressure</span></a></li>
+							</ul>	
+							</li>
+							<li><a href=/reports><i class="icon-tasks"></i><span class="hidden-tablet"> Reports</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<!-- end: Main Menu -->
+				
+				<noscript>
+					<div class="alert alert-block span10">
+						<h4 class="alert-heading">Warning!</h4>
+						<p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+					</div>
+				</noscript>
+				
+				<!-- start: Content -->
+				<div id="content" class="span10">
+				
+							
+				<ul class="breadcrumb">
+					<li>
+						<i class="icon-home"></i>
+						<a href=/>Home</a> 
+						<i class="icon-angle-right"></i>
+					</li>
+					<li><a href="/reports">Reports</a></li>
+					
+				</ul>
+				<h1 align="center">Historic Reports</h1>
+
+				<div class="row-fluid">
+					
+					<div class="box">
+						<div class="box-header">
+							<h2><i class="halflings-icon list-alt"></i><span class="break"></span></h2>
+						</div>
+						<div class="box-content">
+							<div id="container1" ng-controller="AppCtrl" class="center" style="height:800px;" >
+
+									
+											<div class ="container" id="form">
+											<form id= "dataForm">
+											  
+											
+											<select id="drop" name = "parameter" ng-model="formData.option">
+											  <option value="temp" ng-model="formData.temp">Temperature</option>
+											  <option value="pressure" ng-model="formData.pressure">Pressure</option>
+											  <option value="humidity" ng-model="formData.humidity">Humidity</option>
+											</select>
+										
+											 	<div>
+											  <input type="date" name="date" id="theDate" ng-model="formData.date">
+											  <input type="button" id="getData" value="Get data" class="btn btn-info" ng-click="checkOptions()">
+											  </div>
+											  <button id="pdfButton" class="btn btn-info" onclick="javascript:demoFromHTML();">PDF</button>
+											</form>
+											</div>
+											<div class="drop-down-show-hide"  id="pressure">
+											<table class = "table">
+											<thead>
+											<tr>
+												<th> Time
+											<th> Pressure </th>
+											
+											</thead>
+											<tbody>
+												<tr ng-repeat="datapoint in datalist">
+													<td> {{datapoint.timeStamp}}</td>
+										          <td>{{datapoint.Pressure}}</td>
+										          <!-- <td>{{datapoint.AmbientTemp}}</td> -->
+										         
+										        </tr>	
+
+
+											</tbody>
+											</table> 
+										</div>
+											<div class="drop-down-show-hide" id="temp">
+											<table class = "table" >
+											<thead>
+											<tr>
+												<th> Time </th>
+											<th> Object Temperature </th>
+											<th> Ambient Temperature </th>
+											</thead>
+											<tbody>
+												<tr ng-repeat="datapoint in datalist">
+													<td> {{datapoint.timeStamp}}</td>
+										          <td>{{datapoint.ObjectTemp}}</td>
+										          <td>{{datapoint.AmbientTemp}}</td>
+										         
+										        </tr>	
+
+
+											</tbody>
+											</table> 
+										</div>
+
+										<div class="drop-down-show-hide" id="humidity">
+										<table class = "table">
+											<thead>
+											<tr>
+												<th> Time
+											<th> Humidity </th>
+											
+											</thead>
+											<tbody>
+												<tr ng-repeat="datapoint in datalist">
+													<td> {{datapoint.timeStamp}}</td>
+										          <td>{{datapoint.Humidity}}</td>
+										         
+										        </tr>	
+
+
+											</tbody>
+											</table> 
+
+											
+										</div>
+
+
+											
+
+							</div>
+							
+						</div>
+					</div>
+					
+					
+					
+					
+
+				
+				
+				
+			
+							
+				<!--/row-->
+				
+				
+			
+			
+
+		</div><!--/.fluid-container-->
+		
+				<!-- end: Content -->
+			</div><!--/#content.span10-->
+			</div><!--/fluid-row-->
+			
+		<div class="modal hide fade" id="myModal">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h3>Settings</h3>
+			</div>
+			<div class="modal-body">
+				<p>Here settings can be configured...</p>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal">Close</a>
+				<a href="#" class="btn btn-primary">Save changes</a>
+			</div>
+		</div>
+		
+		<div class="clearfix"></div>
+		
+		<footer>
+
+			<p>
+				
+			</p>
+			<div id="google_translate_element"></div>
+	<script type="text/javascript">
+	function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+}
+	</script>
+	<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+
+		</footer>
+		
+		<!-- start: JavaScript-->
+
+
+			<script src="js/jquery-1.9.1.min.js"></script> 
+
+		<script src="js/jquery-migrate-1.0.0.min.js"></script>
+		
+			<script src="js/jquery-ui-1.10.0.custom.min.js"></script>
+		
+			<script src="js/jquery.ui.touch-punch.js"></script>
+		
+			<script src="js/modernizr.js"></script>
+		
+			<script src="js/bootstrap.min.js"></script>
+		
+			<script src="js/jquery.cookie.js"></script>
+		
+			<script src='js/fullcalendar.min.js'></script>
+		
+			<script src='js/jquery.dataTables.min.js'></script>
+
+			<script src="js/excanvas.js"></script>
+		<script src="js/jquery.flot.js"></script>
+		<script src="js/jquery.flot.pie.js"></script>
+		<script src="js/jquery.flot.stack.js"></script>
+		<script src="js/jquery.flot.resize.min.js"></script>
+		
+			<script src="js/jquery.chosen.min.js"></script>
+		
+			<script src="js/jquery.uniform.min.js"></script>
+			
+			<script src="js/jquery.cleditor.min.js"></script>
+		
+			<script src="js/jquery.noty.js"></script>
+		
+			<script src="js/jquery.elfinder.min.js"></script>
+		
+			<script src="js/jquery.raty.min.js"></script>
+		
+			<script src="js/jquery.iphone.toggle.js"></script>
+		
+			<script src="js/jquery.uploadify-3.1.min.js"></script>
+		
+			<script src="js/jquery.gritter.min.js"></script>
+		
+			<script src="js/jquery.imagesloaded.js"></script>
+		
+			<script src="js/jquery.masonry.min.js"></script>
+		
+			<script src="js/jquery.knob.modified.js"></script>
+		
+			<script src="js/jquery.sparkline.min.js"></script>
+		
+			<script src="js/counter.js"></script>
+		
+			<script src="js/retina.js"></script>
+
+			<script src="js/custom.js"></script>
+			<script src="js/hide.js"></script>
+	
+			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.2/angular.min.js"></script>
+	        <script src="controllers/controller.js"> </script>
+	    	 <script src="js/tablesort.js"> </script>
+	    	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.1.135/jspdf.debug.js"></script>
+	       
+		<!-- end: JavaScript-->
+	    	
+	    	
+		
+	</body>
+	</html>
