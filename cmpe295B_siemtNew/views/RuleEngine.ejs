@@ -236,7 +236,7 @@ $(document).ready(function() {
     var wrapper= $("#input_fields_wrap"); //Fields wrapper
     var suggestvalue = $("#suggestValue");
     
-    $(add_button).click(function(e){ //on add input button click
+    add_button.click(function(e){ //on add input button click
         e.preventDefault();
         var getdata="";
         var ret;
@@ -272,7 +272,7 @@ $(document).ready(function() {
           type: 'get',
           dataType: 'json',
           success: function (ndata) {
-                   ret = JSON.parse(JSON.stringify(ndata));
+                    ret = JSON.parse(JSON.stringify(ndata));
                     id = ret.seq;
                     console.log("Inside the ajax"+id);
                     $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Rule?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
@@ -285,13 +285,31 @@ $(document).ready(function() {
                     type: "POST",
                     contentType: "application/json" ,
                     success:function(data){
-                        testrule();
+                        console.log("Inside success of ajax  2"+id);
+                                $.ajax({
+                                          url: 'https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Rule/'+id+'?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0',
+                                          type: 'get',
+                                          dataType: 'json',
+                                          success: function (pdata) {
+                                            var getd="";
+                                             getd=JSON.parse(JSON.stringify(pdata));
+                                            var linkID= getd._id;
+                                             document.getElementsByTagName("a")[0].setAttribute("id", linkID);
+                                              wrapper.append('<tbody><tr><td>'+getd.Attribute+'</td><td>'+getd.Rule_Condition+'</td><td>'+getd.Condition_Value+'</td><td>'+getd.Status+'</td><td id=\'action\'">'+getd.Action+'</td><td><a style="padding-left:30px" href="#" class="remove_field">Remove</a></td></tr></tbody>');
+                                          
+                                          },
+                                          error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                            console.log('error', errorThrown);
+                                          }
+                                        });
                     }} );
+                               
           },
           error: function (XMLHttpRequest, textStatus, errorThrown) {
             console.log('error', errorThrown);
           }
-        });        
+        });  
+        
     });
     
     
@@ -302,9 +320,10 @@ $(document).ready(function() {
     console.log("Id of remove  "+id);
        $.ajax( { url: "https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Rule/"+id+"?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0",
           type: "DELETE",
-          async: true,
           timeout: 300000,
-          success: function (data) { },
+          success: function (data) { 
+           $("#divSettings").html(data);
+       },
           error: function (xhr, status, err) { } } );
    
            $(this).parents('tr').remove();  
@@ -383,6 +402,8 @@ $(document).ready(function() {
 <script type="text/javascript">
 
 function testrule(){
+    console.log("Inside the test rule");
+
  var getdata="";
  var wrapper= $("#input_fields_wrap"); //Fields wrapper
  
@@ -406,79 +427,93 @@ function testrule(){
 }
 
 window.onload = function(){
+    console.log("Calling from windows on load rule");
     testrule();
 }
 
-function ruleEngine(){
-    var objT=0;
-    var ambT=0;
-    var hum=0;
-    var pres=0;
-    var valmax_T=1000000;
-    var valmin_T=0;
-    var valmax_P=1000000;
-    var valmin_P=0;
-    var valmax_H=1000000;
-    var valmin_H=0;
-    var socket = io.connect('//localhost:3000');
-    $.ajax({
-      url: 'https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Rule?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0&q={"Status": "Active"}',
-      type: 'get',
-      dataType: 'json',
-      success: function (data) {
-      getdata=JSON.parse(JSON.stringify(data));
-      console.log("getdata"+getdata);
-          for(var i=0;i<getdata.length;i++) {  
-            if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
-                if(getdata[i].Condition_Value<valmax_T){
-                valmax_T=getdata[i].Condition_Value;
-            }
-            }else if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
-                if(getdata[i].Condition_Value>valmin_T){
-                valmin_T=getdata[i].Condition_Value;
-            }
+ function ruleEngine() {
+                            var objT=0;
+                            var ambT=0;
+                            var hum=0;
+                            var pres=0;
+                            var valmax_T=1000000;
+                            var valmin_T=0;
+                            var valmax_P=1000000;
+                            var valmin_P=0;
+                            var valmax_H=1000000;
+                            var valmin_H=0;
+                            var valmax_AT=1000000;
+                            var valmin_AT=0;
+                            var socket = io.connect('//localhost:3000');
+                            $.ajax({
+                              url: 'https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Rule?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0&q={"Status": "Active"}',
+                              type: 'get',
+                              dataType: 'json',
+                              success: function (data) {
+                              getdata=JSON.parse(JSON.stringify(data));
+                              console.log("getdata"+getdata);
+                                  for(var i=0;i<getdata.length;i++) {  
+                                    if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_T){
+                                        valmax_T=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_T){
+                                        valmin_T=getdata[i].Condition_Value;
+                                    }
 
-            }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
-                if(getdata[i].Condition_Value<valmax_H){
-                valmax_H=getdata[i].Condition_Value;
-            }
-            }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
-                if(getdata[i].Condition_Value>valmin_H){
-                valmin_H=getdata[i].Condition_Value;
-            }
+                                    }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_H){
+                                        valmax_H=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_H){
+                                        valmin_H=getdata[i].Condition_Value;
+                                    }
 
-            } else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
-                if(getdata[i].Condition_Value<valmax_P){
-                valmax_P=getdata[i].Condition_Value;
-            }
-            }else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
-                if(getdata[i].Condition_Value>valmin_P){
-                valmin_P=getdata[i].Condition_Value;
-            }
+                                    } else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_P){
+                                        valmax_P=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_P){
+                                        valmin_P=getdata[i].Condition_Value;
+                                    } 
+                                    }else if(getdata[i].Attribute=="AmbientTemp"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_AT){
+                                        valmax_AT=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="AmbientTemp"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_AT){
+                                        valmin_AT=getdata[i].Condition_Value;
+                                    }
 
-            }
+                                    }
 
-      }
-      },
-      error: function (XMLHttpRequest, textStatus, errorThrown) {
-        console.log('error', errorThrown);
-      }
-    });
-       socket.on('objTemp', function(data) {
-                objT=parseInt(data.objTemp);
-            });
-            socket.on('humTemp', function(data) {
-                hum=parseInt(data.humidity);
-            });
-            socket.on('Pressure', function(data) {
-                pres=parseInt(data.press);
-            }); 
-            if(objT<valmax_T||objT>valmin_T||hum<valmax_H||hum>valmin_H||pres<valmax_P||pres>valmin_P){
-                    alert("alert for rule");
-                }
-            //setTimeout(ruleEngine, 5000);
-}
-ruleEngine();
+                              }
+                              },
+                              error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log('error', errorThrown);
+                              }
+                            });
+                               socket.on('objTemp', function(data) {
+                                        objT=parseInt(data.objTemp);
+                                        ambT=parseInt(data.ambTemp);
+
+                                    });
+                                    socket.on('humTemp', function(data) {
+                                        hum=parseInt(data.humidity);
+                                    });
+                                    socket.on('Pressure', function(data) {
+                                        pres=parseInt(data.press);
+                                    }); 
+                                    if(objT<valmax_T||objT>valmin_T||hum<valmax_H||hum>valmin_H||pres<valmax_P||pres>valmin_P||ambT<valmax_AT||ambT>valmin_AT){
+                                           alert("alert for rule");
+                                        }
+                                    setTimeout(ruleEngine, 5000);
+                        }
+                        ruleEngine();
+
 </script>
 
 <script src="/js/jquery-1.9.1.min.js"></script>

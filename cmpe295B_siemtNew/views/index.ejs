@@ -330,6 +330,98 @@
 });
 
        </script>   
+
+                    <!-- Rule Engine on the Index page-->
+
+                     <script type="text/javascript">
+                    function ruleEngine() {
+                            var objT=0;
+                            var ambT=0;
+                            var hum=0;
+                            var pres=0;
+                            var valmax_T=1000000;
+                            var valmin_T=0;
+                            var valmax_P=1000000;
+                            var valmin_P=0;
+                            var valmax_H=1000000;
+                            var valmin_H=0;
+                            var valmax_AT=1000000;
+                            var valmin_AT=0;
+                            var socket = io.connect('//localhost:3000');
+                            $.ajax({
+                              url: 'https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Rule?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0&q={"Status": "Active"}',
+                              type: 'get',
+                              dataType: 'json',
+                              success: function (data) {
+                              getdata=JSON.parse(JSON.stringify(data));
+                              console.log("getdata"+getdata);
+                                  for(var i=0;i<getdata.length;i++) {  
+                                    if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_T){
+                                        valmax_T=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_T){
+                                        valmin_T=getdata[i].Condition_Value;
+                                    }
+
+                                    }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_H){
+                                        valmax_H=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_H){
+                                        valmin_H=getdata[i].Condition_Value;
+                                    }
+
+                                    } else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_P){
+                                        valmax_P=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_P){
+                                        valmin_P=getdata[i].Condition_Value;
+                                    } 
+                                    }else if(getdata[i].Attribute=="AmbientTemp"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_AT){
+                                        valmax_AT=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="AmbientTemp"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_AT){
+                                        valmin_AT=getdata[i].Condition_Value;
+                                    }
+
+                                    }
+
+                              }
+                              },
+                              error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log('error', errorThrown);
+                              }
+                            });
+                               socket.on('objTemp', function(data) {
+                                        objT=parseInt(data.objTemp);
+                                        ambT=parseInt(data.ambTemp);
+
+                                    });
+                                    socket.on('humTemp', function(data) {
+                                        hum=parseInt(data.humidity);
+                                    });
+                                    socket.on('Pressure', function(data) {
+                                        pres=parseInt(data.press);
+                                    }); 
+                                    if(objT<valmax_T||objT>valmin_T||hum<valmax_H||hum>valmin_H||pres<valmax_P||pres>valmin_P||ambT<valmax_AT||ambT>valmin_AT){
+                                           // alert("alert for rule");
+                                        }
+                                    setTimeout(ruleEngine, 5000);
+                        }
+                        ruleEngine();
+
+
+                    </script>
+
+
+
 </head>
 
 <body>

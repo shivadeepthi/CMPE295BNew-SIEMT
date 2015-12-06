@@ -509,7 +509,7 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 		function  listenForReading(){		
 			tag.on('irTemperatureChange', function(objectTemp, ambientTemp) {
 
-				//console.log('\tObject Temp = %d deg. C', objectTemp.toFixed(1));
+				console.log('\tObject Temp = %d deg. C', ambientTemp.toFixed(1));
 				function TempChange() {
 					io.sockets.emit('objTemp', { sensorId:tag.id, objTemp: objectTemp, ambTemp: ambientTemp});
 				};
@@ -543,9 +543,9 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 		function  listenForAcc(){
 			
 			tag.on('accelerometerChange', function(x,y,z){
-				console.log('\tAccx = %d', x.toFixed(1));
+				/*console.log('\tAccx = %d', x.toFixed(1));
 				console.log('\tAccY = %d', y.toFixed(1));
-				console.log('\tAccZ = %d', z.toFixed(1));
+				console.log('\tAccZ = %d', z.toFixed(1));*/
 				function AccChange() {
 					io.sockets.emit('Accelero', { sensorId:tag.id,acc: x, ler: y, met:z });
 				};
@@ -557,13 +557,11 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 		function  listenForMagneto(){
 			
 			tag.on('magnetometerChange', function(x,y,z){
-				console.log('\tMccx = %d', x.toFixed(1));
-				console.log('\tMccY = %d', y.toFixed(1));
-				console.log('\tMccZ = %d', z.toFixed(1));
-				function MegnatoChange() {
+				
+				function MagnetoChange() {
 					io.sockets.emit('Magneto', { sensorId:tag.id,magX: x, magY: y, magZ:z });
 				};
-				MegnatoChange();
+				MagnetoChange();
 
 			});
 		}
