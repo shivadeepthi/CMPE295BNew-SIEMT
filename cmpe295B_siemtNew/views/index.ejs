@@ -34,6 +34,7 @@
     <script>  
             var socket = io.connect('//localhost:3000');
             socket.on('objTemp', function(data) {
+            	$('#status').html("Connected");
                 $('#objTemp').html(parseInt(data.objTemp));
                 console.log("This is my places");
                 $('#ambTemp').html(parseInt(data.ambTemp));
@@ -189,7 +190,7 @@
             dataLabels: {
                 format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                     ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
-                       '<span style="font-size:12px;color:silver">deg/.c</span></div>'
+                       '<span style="font-size:12px;color:silver"></span></div>'
             },
             tooltip: {
                 valueSuffix: ' deg/.c'
@@ -428,13 +429,10 @@
                         <a href="/humidity"> Click Here</a>
                     </div>
                 </div>
-                <div class="span3 statbox yellow" onTablet="span6" onDesktop="span3">
-                    <div class="boxchart">7,2,2,2,1,-4,-2,4,8,,0,3,3,5</div>
-                   <!-- <div class="number" id="humidity"><i class="icon-arrow-down"></i></div> -->
-                    <div class="title">Reports</div>
-                    <div class="footer">
-                        <a href="/reports"> Click Here</a>
-                    </div>
+                <div class="span3 statbox red" onTablet="span6" onDesktop="span3">
+                    <div class="boxchart">7,2,4,6,10,5,6,9</div>
+                   <!-- <div class="number" id="status"><i class="icon-arrow-down"></i></div> -->
+                    <div class="number" id="status">
                 </div>  
                 
             </div>      
@@ -500,12 +498,12 @@
                 </div>             
             </div>
 
-
-
+			<br>
+			<br>
                  <div class="row-fluid hideInIE8 circleStats">
                 
                 <div class="span4" onTablet="span8" onDesktop="span4">
-                    <div class="circleStatsItemBox yellow">
+                    <div class="circleStatsItemBox orangeDark">
                         <div class="header">Object Temperature</div>
                         <div  id="container-speed"  style="width: 300px; height: 200px">
                           
@@ -514,7 +512,7 @@
                 </div>
 
                 <div class="span4" onTablet="span8" onDesktop="span4">
-                    <div class="circleStatsItemBox green">
+                    <div class="circleStatsItemBox pink">
                         <div class="header">Humidity</div>
                         <div id="container-humidity" style="width: 300px; height: 200px"> 
                         </div>   
@@ -522,7 +520,7 @@
                 </div>
 
                 <div class="span4" onTablet="span8" onDesktop="span4">
-                    <div class="circleStatsItemBox greenDark">
+                    <div class="circleStatsItemBox black">
                         <div class="header">Pressure</div>
                         <div id="container-pressure" style="width: 300px; height: 200px">
                         </div>
@@ -531,7 +529,8 @@
                         
             </div> 
 
-
+			<br>
+			<br>
                 <div class="row-fluid">
                 
                 <div class="span6" onTablet="span7" onDesktop="span6">
