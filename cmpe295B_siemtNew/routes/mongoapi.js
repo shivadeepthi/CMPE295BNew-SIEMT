@@ -595,8 +595,8 @@ function insertPredictedValue(callback,datapoint,predVal){
 // data for reports
 function getTemperatureOfDay(callback,option,dateValue){
 	var options =option;
-	var dataValue=dataValue;
-	console.log("inside mongoapi.js"+options+""+dataValue);
+	var date=dateValue;
+	console.log("inside mongoapi.js"+options+""+date);
 	db=new mongodb.Db('cmpe295b_siemt', new mongodb.Server('ds045704.mongolab.com', 45704, {auto_reconnect:true}), {});
 	db.open(function(err, db) {
 		db.authenticate('username','password',function(err){
@@ -605,9 +605,11 @@ function getTemperatureOfDay(callback,option,dateValue){
 			}else{
 				var cursor=
 db.collection(options).find(
-    { "timeStamp": {$gte: new Date('11/07/2015')} },
+    { "timeStamp": {$gte:date}},
     {  _id: 0}
-).toArray(function(err, docs) {
+);
+	cursor.limit(2000);
+	cursor.toArray(function(err, docs) {
 
 					callback(null,docs);
 				});	

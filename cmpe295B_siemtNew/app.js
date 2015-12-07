@@ -413,7 +413,8 @@ app.post('/checkOptions', function (req, res) {
 app.post("/getValueOption",function(req,res){
 		var options =req.body.option;
 		var date =req.body.date;
-		console.log("inside post"+req.body.date);
+		var results;
+		console.log("inside post"+date+options);
 
 		mongo.getTemperatureOfDay(function(err,reslt){
 		if(err){
@@ -423,12 +424,12 @@ app.post("/getValueOption",function(req,res){
 			console.log(recs.length);
 			
 			console.log(recs);
+		res.json(recs);
 		}
 
-		res.json(recs);
 	},options,date);
 
-// 	
+
 
 });
 
