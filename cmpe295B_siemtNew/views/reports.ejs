@@ -209,6 +209,7 @@
 											</thead>
 											<tbody>
 												<tr class="danger" ng-repeat="datapoint in datalist">
+													<li ng-if="datalist.length===0">No records found</li>
 													<td> {{datapoint.timeStamp}}</td>
 										          <td>{{datapoint.Pressure}}</td>
 										          <!-- <td>{{datapoint.AmbientTemp}}</td> -->
@@ -234,6 +235,8 @@
 											</thead>
 											<tbody>
 												<tr class="danger" ng-repeat="datapoint in datalist">
+												<li ng-if="datalist.length===0">No records found</li>
+												
 												<td> {{datapoint.timeStamp}}</td>
 													<td> {{datapoint.AcceleroX}}</td>
 										          <td>{{datapoint.AcceleroY}}</td>
@@ -256,6 +259,7 @@
 											</thead>
 											<tbody>
 												<tr class="info" ng-repeat="datapoint in datalist">
+													<li ng-if="datalist.length===0">No records found</li>
 													<td> {{datapoint.timeStamp}}</td>
 										          <td>{{datapoint.ObjectTemp}}</td>
 										          <td>{{datapoint.AmbientTemp}}</td>
@@ -277,6 +281,7 @@
 											</thead>
 											<tbody>
 												<tr class="info" ng-repeat="datapoint in datalist">
+													 <li ng-if="datalist.length===0">No records found</li>
 													<td> {{datapoint.timeStamp}}</td>
 										          <td>{{datapoint.Humidity}}</td>
 										         
@@ -401,7 +406,7 @@
 			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.2/angular.min.js"></script>
 	        <script src="controllers/controller.js"> </script>
 	    	 <script src="js/tablesort.js"> </script>
-	    	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.1.135/jspdf.debug.js"></script>
+	    	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
 	       
 		<!-- end: JavaScript-->
 	    	
