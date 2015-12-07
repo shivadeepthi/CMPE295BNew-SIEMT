@@ -203,29 +203,31 @@
 											<form id= "dataForm">
 											  
 											
-											<select id="drop" name = "parameter" ng-model="formData.option">
-											  <option value="temp" ng-model="formData.temp">Temperature</option>
-											  <option value="pressure" ng-model="formData.pressure">Pressure</option>
-											  <option value="humidity" ng-model="formData.humidity">Humidity</option>
+											<select required id="drop" name = "parameter" ng-model="formData.option">
+											  <option id="tempDrop"value="temp" ng-model="formData.temp">Temperature</option>
+											  <option id="pressureDrop" value="pressure" ng-model="formData.pressure">Pressure</option>
+											  <option id="humidityDrop" value="humidity" selected="selected" ng-model="formData.humidity">Humidity</option>
 											</select>
 										
-											 	<div>
-											  <input type="date" name="date" id="theDate" ng-model="formData.date">
+
+											  <input required type="date" name="date" id="theDate" ng-model="formData.date">
+											  	 &nbsp;&nbsp;&nbsp;&nbsp;
+
 											  <input type="button" id="getData" value="Get data" class="btn btn-info" ng-click="checkOptions()">
-											  </div>
-											  <button id="pdfButton" class="btn btn-info" onclick="javascript:demoFromHTML();">PDF</button>
+												&nbsp;&nbsp;&nbsp;&nbsp;
+											  <button id="pdfButton" class="btn btn-success" onclick="javascript:demoFromHTML();">Click for PDF</button>
 											</form>
 											</div>
 											<div class="drop-down-show-hide"  id="pressure">
 											<table class = "table">
 											<thead>
-											<tr>
+											<tr class = "danger">
 												<th> Time
 											<th> Pressure </th>
 											
 											</thead>
 											<tbody>
-												<tr ng-repeat="datapoint in datalist">
+												<tr class="danger" ng-repeat="datapoint in datalist">
 													<td> {{datapoint.timeStamp}}</td>
 										          <td>{{datapoint.Pressure}}</td>
 										          <!-- <td>{{datapoint.AmbientTemp}}</td> -->
@@ -239,13 +241,13 @@
 											<div class="drop-down-show-hide" id="temp">
 											<table class = "table" >
 											<thead>
-											<tr>
+											<tr class = "danger">
 												<th> Time </th>
 											<th> Object Temperature </th>
 											<th> Ambient Temperature </th>
 											</thead>
 											<tbody>
-												<tr ng-repeat="datapoint in datalist">
+												<tr class="info" ng-repeat="datapoint in datalist">
 													<td> {{datapoint.timeStamp}}</td>
 										          <td>{{datapoint.ObjectTemp}}</td>
 										          <td>{{datapoint.AmbientTemp}}</td>
@@ -260,13 +262,13 @@
 										<div class="drop-down-show-hide" id="humidity">
 										<table class = "table">
 											<thead>
-											<tr>
+											<tr class = "danger">
 												<th> Time
 											<th> Humidity </th>
 											
 											</thead>
 											<tbody>
-												<tr ng-repeat="datapoint in datalist">
+												<tr class="info" ng-repeat="datapoint in datalist">
 													<td> {{datapoint.timeStamp}}</td>
 										          <td>{{datapoint.Humidity}}</td>
 										         
