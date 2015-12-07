@@ -6,6 +6,9 @@
 			$("#temp").hide();
 			 $("#pressure").hide();
 			  $("#humidity").hide();
+			  	$("#Accelero").hide();
+
+		
 
 			  $('#drop').on('change', function () {
 				  var result = $(this).val();
@@ -15,6 +18,7 @@
 
          $("#pressure").hide();
          $("#humidity").hide();
+         			  	$("#Accelero").hide();
 
     } 
     else if(result === "pressure"){
@@ -22,25 +26,40 @@
       
         $("#temp").hide();
         $("#humidity").hide();
+        			  	$("#Accelero").hide();
 
     } 
     
-       else {
+       else if(result==="humidity") {
 		 $("#humidity").show(); 
 
 		 $("#temp").hide();
 		  $("#pressure").hide();
+		 	$("#Accelero").hide();
 
-		 }    
+
+		 }  
+
+
+		 else  {
+		 $("#Accelero").show(); 
+
+		 $("#temp").hide();
+		  $("#pressure").hide();
+		   $("#humidity").hide();
+
+
+		 }      
  
 });
 
-			
+
 		});
 
 		$( "#getData" ).click(function() {
  		$("#pdfButton").show();
 		});
+
 
 	
 	
