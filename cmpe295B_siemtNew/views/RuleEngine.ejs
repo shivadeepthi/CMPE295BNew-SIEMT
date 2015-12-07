@@ -27,6 +27,8 @@
     <!-- end: CSS -->
    <!-- <script src='http://localhost:3000/socket.io/socket.io.js'></script>-->
    <script src='/socket.io/socket.io.js'></script>
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
      
         <script>  
             <!--var socket = io.connect('//localhost:3000');-->
@@ -95,13 +97,13 @@
                     <ul class="nav nav-tabs nav-stacked main-menu">
                         <li><a href="/"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Dashboard</span></a></li>   
                         <li>
-							<a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> Historic Analysis</span></a>
-							<ul>
-								<li><a class="submenu" href=/temperature><i class="icon-file-alt"></i><span class="hidden-tablet"> Temperature</span></a></li>
-								<li><a class="submenu" href=/humidity><i class="icon-file-alt"></i><span class="hidden-tablet"> Humidity</span></a></li>
-								<li><a class="submenu" href=/pressure><i class="icon-file-alt"></i><span class="hidden-tablet"> Pressure</span></a></li>
-							</ul>	
-							</li>
+                            <a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> Historic Analysis</span></a>
+                            <ul>
+                                <li><a class="submenu" href=/temperature><i class="icon-file-alt"></i><span class="hidden-tablet"> Temperature</span></a></li>
+                                <li><a class="submenu" href=/humidity><i class="icon-file-alt"></i><span class="hidden-tablet"> Humidity</span></a></li>
+                                <li><a class="submenu" href=/pressure><i class="icon-file-alt"></i><span class="hidden-tablet"> Pressure</span></a></li>
+                            </ul>   
+                            </li>
                         <li><a href="/reports"><i class="icon-align-justify"></i><span class="hidden-tablet"> Reports</span></a></li>
                     </ul>
                 </div>
@@ -121,14 +123,14 @@
             
             <ul class="breadcrumb">
             <li>
-						<i class="icon-home"></i>
-						<a href="/">Home</a> 
-						<i class="icon-angle-right"></i>
-					   
-					
-						<a href=/ruleengine>Rules</a>
-						
-					</li>
+                        <i class="icon-home"></i>
+                        <a href="/">Home</a> 
+                        <i class="icon-angle-right"></i>
+                       
+                    
+                        <a href=/ruleengine>Rules</a>
+                        
+                    </li>
             </ul>
 
             <div class="row-fluid">
@@ -332,8 +334,6 @@ $(document).ready(function() {
     });
 
   
-  
-      
       suggestvalue.click(function (e) {
         var datapoint = document.getElementById('criteria').value;
         console.log(datapoint);
@@ -434,72 +434,12 @@ window.onload = function(){
 }
 
  function ruleEngine() {
+                            var socket = io();
                             var objT=0;
                             var ambT=0;
                             var hum=0;
                             var pres=0;
-                            var valmax_T=1000000;
-                            var valmin_T=0;
-                            var valmax_P=1000000;
-                            var valmin_P=0;
-                            var valmax_H=1000000;
-                            var valmin_H=0;
-                            var valmax_AT=1000000;
-                            var valmin_AT=0;
-                           <!-- var socket = io.connect('//localhost:3000');-->
-                           var socket = io();
-                            $.ajax({
-                              url: 'https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Rule?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0&q={"Status": "Active"}',
-                              type: 'get',
-                              dataType: 'json',
-                              success: function (data) {
-                              getdata=JSON.parse(JSON.stringify(data));
-                              console.log("getdata"+getdata);
-                                  for(var i=0;i<getdata.length;i++) {  
-                                    if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
-                                        if(getdata[i].Condition_Value<valmax_T){
-                                        valmax_T=getdata[i].Condition_Value;
-                                    }
-                                    }else if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
-                                        if(getdata[i].Condition_Value>valmin_T){
-                                        valmin_T=getdata[i].Condition_Value;
-                                    }
-
-                                    }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
-                                        if(getdata[i].Condition_Value<valmax_H){
-                                        valmax_H=getdata[i].Condition_Value;
-                                    }
-                                    }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
-                                        if(getdata[i].Condition_Value>valmin_H){
-                                        valmin_H=getdata[i].Condition_Value;
-                                    }
-
-                                    } else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
-                                        if(getdata[i].Condition_Value<valmax_P){
-                                        valmax_P=getdata[i].Condition_Value;
-                                    }
-                                    }else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
-                                        if(getdata[i].Condition_Value>valmin_P){
-                                        valmin_P=getdata[i].Condition_Value;
-                                    } 
-                                    }else if(getdata[i].Attribute=="AmbientTemp"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
-                                        if(getdata[i].Condition_Value<valmax_AT){
-                                        valmax_AT=getdata[i].Condition_Value;
-                                    }
-                                    }else if(getdata[i].Attribute=="AmbientTemp"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
-                                        if(getdata[i].Condition_Value>valmin_AT){
-                                        valmin_AT=getdata[i].Condition_Value;
-                                    }
-
-                                    }
-
-                              }
-                              },
-                              error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                console.log('error', errorThrown);
-                              }
-                            });
-                               socket.on('objTemp', function(data) {
+                            socket.on('objTemp', function(data) {
                                         objT=parseInt(data.objTemp);
                                         ambT=parseInt(data.ambTemp);
 
@@ -510,10 +450,126 @@ window.onload = function(){
                                     socket.on('Pressure', function(data) {
                                         pres=parseInt(data.press);
                                     }); 
-                                    if(objT<valmax_T||objT>valmin_T||hum<valmax_H||hum>valmin_H||pres<valmax_P||pres>valmin_P||ambT<valmax_AT||ambT>valmin_AT){
-                                           alert("alert for rule");
+
+                            
+                            var valmax_T=1000000;
+                            var valmin_T=0;
+                            var valmax_P=1000000;
+                            var valmin_P=0;
+                            var valmax_H=1000000;
+                            var valmin_H=0;
+                            var valmax_AT=1000000;
+                            var valmin_AT=0;
+                            var flagTM= false;
+                            var flagTm= false;
+                            var flagHM, flagHm, flagPM, flagPm, flagATM, flagATm= false;
+
+                          //var socket = io.connect('//localhost:3000');-->
+                          
+                            $.ajax({
+                              url: 'https://api.mongolab.com/api/1/databases/cmpe295b_siemt/collections/Rule?apiKey=rvu6pAb1B5s-xO1eQBgXKTWMzRQOHQ-0&q={"Status": "Active"}',
+                              type: 'get',
+                              dataType: 'json',
+                              success: function (data) {
+                              getdata=JSON.parse(JSON.stringify(data));
+                              console.log("getdata"+getdata);
+                                  for(var i=0;i<getdata.length;i++) {  
+                                    if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        
+                                        if(getdata[i].Condition_Value<valmax_T){
+                                           flagTM= true;
+                                        valmax_T=getdata[i].Condition_Value;
+                                        
+                                    }
+                                    }else if(getdata[i].Attribute=="Temperature"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        
+                                        if(getdata[i].Condition_Value>valmin_T){
+                                            flagTm= true;
+                                        valmin_T=getdata[i].Condition_Value;
+                                    }
+
+                                    }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_H){
+                                             flagHM= true;
+                                        valmax_H=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="Humidity"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_H){
+                                             flagHm= true;
+                                        valmin_H=getdata[i].Condition_Value;
+                                    }
+
+                                    } else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_P){
+                                             flagPM= true;
+                                        valmax_P=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="Pressure"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_P){
+                                             flagPm= true;
+                                        valmin_P=getdata[i].Condition_Value;
+                                    } 
+                                    }else if(getdata[i].Attribute=="AmbientTemp"&&(getdata[i].Rule_Condition==">"||getdata[i].Rule_Condition==">=")){
+                                        if(getdata[i].Condition_Value<valmax_AT){
+                                             flagATM= true;
+                                        valmax_AT=getdata[i].Condition_Value;
+                                    }
+                                    }else if(getdata[i].Attribute=="AmbientTemp"&&(getdata[i].Rule_Condition=="<"||getdata[i].Rule_Condition=="<=")){
+                                        if(getdata[i].Condition_Value>valmin_AT){
+                                             flagAm= true;
+                                        valmin_AT=getdata[i].Condition_Value;
+                                    }
+
+                                    }
+
+                              }
+                              
+                            if(flagTM && objT>valmax_T){
+                            alert("alert for temp greater rule");
+                                $.ajax({
+                                        type:"POST",
+                                        url: "/sendEmailAlert"
+                                        });  
                                         }
-                                    setTimeout(ruleEngine, 5000);
+                                        if(flagTm && objT<valmin_T){
+                                            
+                                           alert("alert for temp smaller rule");
+                                        }
+                                        if(flagHM && hum>valmax_H){
+                                            
+                                           alert("alert for Humidity greater rule");
+                                        }
+                                        if(flagHm && hum<valmin_H){
+                                           
+                                           alert("alert for Humidity smaller rule");
+                                        }
+                                        if(flagPM && pres>valmax_P){
+                                           
+                                           alert("alert for Pressure greater rule");
+                                        }
+                                        if(flagPm && pres<valmin_P){
+                                         
+                                           alert("alert for Pressure smaller rule");
+                                        }
+                                        if(flagATM && ambT>valmax_AT){
+                                            console.log(flagTM);
+                                           alert("alert for Humidity greater rule");
+                                        }
+                                        if(flagATm && ambT<valmin_AT){
+                                            
+                                           alert("alert for Humidity smaller rule");
+                                        }
+
+
+
+
+                              },
+                              error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log('error', errorThrown);
+                              }
+                            });
+                               
+                           setTimeout(ruleEngine, 5000);
                         }
                         ruleEngine();
 

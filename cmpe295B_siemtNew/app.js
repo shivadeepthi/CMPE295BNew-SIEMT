@@ -35,8 +35,8 @@ db = new mongodb.Db('cmpe295b_siemt', new mongodb.Server(
 var smtpTransport = nodemailer.createTransport("SMTP",{
 	service: "Gmail",
 	auth: {
-		user: "chilukuri3@gmail.com",
-		pass: "deepthi999"
+		user: "fromcmpe295bsiemt@gmail.com",
+		pass: "cmpe295b"
 	}
 });
 
@@ -143,8 +143,24 @@ passport.use(new LocalStrategy(function(username, password, done) {
 }));
 
 
-
-
+app.post("/sendEmailAlert",function(req,res){
+	console.log("sending email alert");
+			var mailOptions={
+					to : "chilukuri3@gmail.com",
+					subject :"SIEMT ALERT",
+					text : "Rule condition met"
+					}
+					console.log(mailOptions);
+					smtpTransport.sendMail(mailOptions, function(error, response){
+					if(error){
+					console.log(error);
+					res.end("error");
+					}else{
+					console.log("Message sent");
+					}
+					});
+		});
+		
 app.get("/temperature",function(req,res){
 	var dates=[];
 	var temp=[];
