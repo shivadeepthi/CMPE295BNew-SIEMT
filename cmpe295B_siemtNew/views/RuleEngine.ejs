@@ -525,7 +525,7 @@ window.onload = function(){
                               }
                               
                             if(flagTM && objT>valmax_T){
-                            alert("alert for temp greater rule");
+                            //alert("alert for temp greater rule");
                                 $.ajax({
                                         type:"POST",
                                         url: "/sendEmailAlert"
@@ -533,31 +533,59 @@ window.onload = function(){
                                         }
                                         if(flagTm && objT<valmin_T){
                                             
-                                           alert("alert for temp smaller rule");
+                                           //alert("alert for temp smaller rule");
+                                           $.ajax({
+                                        type:"POST",
+                                        url: "/sendEmailAlert"
+                                        });  
                                         }
                                         if(flagHM && hum>valmax_H){
                                             
-                                           alert("alert for Humidity greater rule");
+                                           //alert("alert for Humidity greater rule");
+                                           $.ajax({
+                                        type:"POST",
+                                        url: "/sendEmailAlert"
+                                        });  
                                         }
                                         if(flagHm && hum<valmin_H){
                                            
-                                           alert("alert for Humidity smaller rule");
+                                           //alert("alert for Humidity smaller rule");
+                                           $.ajax({
+                                        type:"POST",
+                                        url: "/sendEmailAlert"
+                                        });  
                                         }
                                         if(flagPM && pres>valmax_P){
                                            
-                                           alert("alert for Pressure greater rule");
+                                           //alert("alert for Pressure greater rule");
+                                           $.ajax({
+                                        type:"POST",
+                                        url: "/sendEmailAlert"
+                                        });  
                                         }
                                         if(flagPm && pres<valmin_P){
                                          
-                                           alert("alert for Pressure smaller rule");
+                                           //alert("alert for Pressure smaller rule");
+                                           $.ajax({
+                                        type:"POST",
+                                        url: "/sendEmailAlert"
+                                        });  
                                         }
                                         if(flagATM && ambT>valmax_AT){
                                             console.log(flagTM);
-                                           alert("alert for Humidity greater rule");
+                                           //alert("alert for Humidity greater rule");
+                                           $.ajax({
+                                        type:"POST",
+                                        url: "/sendEmailAlert"
+                                        });  
                                         }
                                         if(flagATm && ambT<valmin_AT){
                                             
-                                           alert("alert for Humidity smaller rule");
+                                           //alert("alert for Humidity smaller rule");
+                                           $.ajax({
+                                        type:"POST",
+                                        url: "/sendEmailAlert"
+                                        });  
                                         }
 
 

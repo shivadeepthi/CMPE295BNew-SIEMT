@@ -144,16 +144,16 @@ passport.use(new LocalStrategy(function(username, password, done) {
 
 
 app.post("/sendEmailAlert",function(req,res){
-	console.log("sending email alert");
+	//console.log("sending email alert");
 			var mailOptions={
 					to : "chilukuri3@gmail.com",
 					subject :"SIEMT ALERT",
 					text : "Rule condition met"
 					}
-					console.log(mailOptions);
+					//console.log(mailOptions);
 					smtpTransport.sendMail(mailOptions, function(error, response){
 					if(error){
-					console.log(error);
+					//console.log(error);
 					res.end("error");
 					}else{
 					console.log("Message sent");
@@ -171,7 +171,7 @@ app.get("/temperature",function(req,res){
 			throw err;
 		}else{
 			var recs=JSON.parse(JSON.stringify(reslt));
-			console.log(reslt.length);
+			//console.log(reslt.length);
 
 			var date;
 			for(var k=0;k<reslt.length;k++){
@@ -230,8 +230,8 @@ app.get("/temperature",function(req,res){
 							throw err;
 						}else{
 							var recs=JSON.stringify(piereslt);
-							console.log("retrun from the pie chart::::"+piereslt.length);
-							console.log(piereslt);
+							//console.log("retrun from the pie chart::::"+piereslt.length);
+							//console.log(piereslt);
 					finalJson.push({"chart1":{"dates":dates,"ambTemp":temp}}, {"chart2":{"maxO": maxObj, "minO": minObj, "maxA":maxAmb, "minA": minAmb}});
 					
 					res.render('temperatureChart',{"minObj":JSON.stringify(finalJson).replace(/\"/g, ""),"pieChart":JSON.stringify(piereslt).replace(/\"/g, "")});
@@ -256,7 +256,7 @@ app.get("/humidity",function(req,res){
 			throw err;
 		}else{
 			var recs=JSON.parse(JSON.stringify(reslt));
-			console.log(reslt.length);
+			//console.log(reslt.length);
 
 			var date;
 			for(var k=0;k<reslt.length;k++){
@@ -300,8 +300,8 @@ app.get("/humidity",function(req,res){
 							throw err;
 						}else{
 							var recs=JSON.stringify(piereslt);
-							console.log("retrun from the pie chart::::"+piereslt.length);
-							console.log(piereslt);
+							//console.log("retrun from the pie chart::::"+piereslt.length);
+							//console.log(piereslt);
 					finalJson.push({"chart1":{"dates":dates}}, {"chart2":{"maxO": maxObj, "minO": minObj}});
 					
 					res.render('humidityChart',{"minObj":JSON.stringify(finalJson).replace(/\"/g, ""),"pieChart":JSON.stringify(piereslt).replace(/\"/g, "")});
@@ -325,7 +325,7 @@ app.get("/pressure",function(req,res){
 			throw err;
 		}else{
 			var recs=JSON.parse(JSON.stringify(reslt));
-			console.log(reslt.length);
+			//console.log(reslt.length);
 
 			var date;
 			for(var k=0;k<reslt.length;k++){
@@ -369,8 +369,8 @@ app.get("/pressure",function(req,res){
 							throw err;
 						}else{
 							var recs=JSON.stringify(piereslt);
-							console.log("retrun from the pie chart::::"+piereslt.length);
-							console.log(piereslt);
+							//console.log("retrun from the pie chart::::"+piereslt.length);
+							//console.log(piereslt);
 					finalJson.push({"chart1":{"dates":dates}}, {"chart2":{"maxO": maxObj, "minO": minObj}});
 					
 					res.render('pressureChart',{"minObj":JSON.stringify(finalJson).replace(/\"/g, ""),"pieChart":JSON.stringify(piereslt).replace(/\"/g, "")});
@@ -414,7 +414,7 @@ app.get("/reports",function(req,res){
 
 
 app.post('/checkOptions', function (req, res) {
-  console.log(req.body.option);
+  //console.log(req.body.option);
   		if(req.body.option=='Temperature')
   		{}
 
@@ -430,16 +430,16 @@ app.post("/getValueOption",function(req,res){
 		var options =req.body.option;
 		var date =req.body.date;
 		var results;
-		console.log("inside post"+date+options);
+		//console.log("inside post"+date+options);
 
 		mongo.getTemperatureOfDay(function(err,reslt){
 		if(err){
 			throw err;
 		}else{
 			var recs=JSON.parse(JSON.stringify(reslt));
-			console.log(recs.length);
+			//console.log(recs.length);
 			
-			console.log(recs);
+			//console.log(recs);
 		res.json(recs);
 		}
 
@@ -470,7 +470,7 @@ app.get("/suggestedValueHumd",function(req,response){
     });
 });
 app.get("/suggestedValueAmpTemp",function(req,response){
-	console.log("Reached here");
+	//console.log("Reached here");
     mongo.suggestAmbTempValue(function(err,result){
             response.json(result);
     });
@@ -478,7 +478,7 @@ app.get("/suggestedValueAmpTemp",function(req,response){
 
 
 var io = require('socket.io').listen(app.listen(3000,function(){
-	console.log("We have started our server on port 3000")
+	//console.log("We have started our server on port 3000")
 	// SensorTag.discover(function(tag) { and close it with }); above ondiscover mthod
 	function onDiscover(tag){
 
@@ -495,7 +495,7 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 		}
 
 		function enableDataPoints(){
-			console.log('enabling Temp datapoint');
+			//console.log('enabling Temp datapoint');
 			tag.enableIrTemperature(notifyMe);
 			tag.enableHumidity(notifyHumd);
 			tag.enableBarometricPressure(notifyPress);
@@ -527,7 +527,7 @@ var io = require('socket.io').listen(app.listen(3000,function(){
 		function  listenForReading(){		
 			tag.on('irTemperatureChange', function(objectTemp, ambientTemp) {
 
-				console.log('\tObject Temp = %d deg. C', ambientTemp.toFixed(1));
+				//console.log('\tObject Temp = %d deg. C', ambientTemp.toFixed(1));
 				function TempChange() {
 					io.sockets.emit('objTemp', { sensorId:tag.id, objTemp: objectTemp, ambTemp: ambientTemp});
 				};
