@@ -146,7 +146,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
 app.post("/sendEmailAlert",function(req,res){
 	//console.log("sending email alert");
 			var mailOptions={
-					to : "chilukuri3@gmail.com",
+					to : "tocmpe295bsiemt@gmail.com",
 					subject :"SIEMT ALERT",
 					text : "Rule condition met"
 					}
