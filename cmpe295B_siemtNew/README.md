@@ -34,7 +34,7 @@ Switch on the TI sensor
 run the following command- node app.js
 
 ###Team
-Divanshu Arneja 
+Divanshu Arneja
 FNU Shilpa
-Shivadeepthi Chilukuri 
+Shivadeepthi Chilukuri
 Anshul Sharma 
