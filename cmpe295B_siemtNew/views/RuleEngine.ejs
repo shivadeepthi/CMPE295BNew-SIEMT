@@ -528,7 +528,8 @@ window.onload = function(){
                             //alert("alert for temp greater rule");
                                 $.ajax({
                                         type:"POST",
-                                        url: "/sendEmailAlert"
+                                        url: "/sendEmailAlert",
+                                        data:{mess:"temperature greater than configured value"}
                                         });  
                                         }
                                         if(flagTm && objT<valmin_T){
@@ -536,7 +537,8 @@ window.onload = function(){
                                            //alert("alert for temp smaller rule");
                                            $.ajax({
                                         type:"POST",
-                                        url: "/sendEmailAlert"
+                                        url: "/sendEmailAlert",
+                                        data:{mess:"temperature less than configured value"}
                                         });  
                                         }
                                         if(flagHM && hum>valmax_H){
@@ -544,7 +546,8 @@ window.onload = function(){
                                            //alert("alert for Humidity greater rule");
                                            $.ajax({
                                         type:"POST",
-                                        url: "/sendEmailAlert"
+                                        url: "/sendEmailAlert",
+                                        data:{mess:"humidity greater than configured value"}
                                         });  
                                         }
                                         if(flagHm && hum<valmin_H){
@@ -552,7 +555,8 @@ window.onload = function(){
                                            //alert("alert for Humidity smaller rule");
                                            $.ajax({
                                         type:"POST",
-                                        url: "/sendEmailAlert"
+                                        url: "/sendEmailAlert",
+                                        data:{mess:"humidity less than configured value"}
                                         });  
                                         }
                                         if(flagPM && pres>valmax_P){
@@ -560,7 +564,8 @@ window.onload = function(){
                                            //alert("alert for Pressure greater rule");
                                            $.ajax({
                                         type:"POST",
-                                        url: "/sendEmailAlert"
+                                        url: "/sendEmailAlert",
+                                        data:{mess:"pressure greater than configured value"}
                                         });  
                                         }
                                         if(flagPm && pres<valmin_P){
@@ -568,7 +573,8 @@ window.onload = function(){
                                            //alert("alert for Pressure smaller rule");
                                            $.ajax({
                                         type:"POST",
-                                        url: "/sendEmailAlert"
+                                        url: "/sendEmailAlert",
+                                        data:{mess:"pressure less than configured value"}
                                         });  
                                         }
                                         if(flagATM && ambT>valmax_AT){
@@ -576,7 +582,8 @@ window.onload = function(){
                                            //alert("alert for Humidity greater rule");
                                            $.ajax({
                                         type:"POST",
-                                        url: "/sendEmailAlert"
+                                        url: "/sendEmailAlert",
+                                        data:{mess:"ambient temperature greater than configured value"}
                                         });  
                                         }
                                         if(flagATm && ambT<valmin_AT){
@@ -584,7 +591,8 @@ window.onload = function(){
                                            //alert("alert for Humidity smaller rule");
                                            $.ajax({
                                         type:"POST",
-                                        url: "/sendEmailAlert"
+                                        url: "/sendEmailAlert",
+                                        data:{mess:"ambient temperature less than configured value"}
                                         });  
                                         }
 

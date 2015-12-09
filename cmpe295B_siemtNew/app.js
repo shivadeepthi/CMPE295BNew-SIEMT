@@ -145,10 +145,12 @@ passport.use(new LocalStrategy(function(username, password, done) {
 
 app.post("/sendEmailAlert",function(req,res){
 	//console.log("sending email alert");
+	var mess=JSON.stringify(req.body.mess);
+	console.log("mess"+mess);
 			var mailOptions={
 					to : "tocmpe295bsiemt@gmail.com",
 					subject :"SIEMT ALERT",
-					text : "Rule condition met"
+					text : "Rule condition met---"+mess
 					}
 					//console.log(mailOptions);
 					smtpTransport.sendMail(mailOptions, function(error, response){
@@ -478,7 +480,7 @@ app.get("/suggestedValueAmpTemp",function(req,response){
 
 
 var io = require('socket.io').listen(app.listen(3000,function(){
-	//console.log("We have started our server on port 3000")
+	console.log("We have started our server on port 3000")
 	// SensorTag.discover(function(tag) { and close it with }); above ondiscover mthod
 	function onDiscover(tag){
 
