@@ -24,12 +24,17 @@ Nodeclipse is free open-source project that grows with your contributions.
 MonogoLab
 bluetooth dongle 4.0
 TI SensorTag
-Cloud deployment - Due to high dependency on sensor we have used ngrok deployment.In order to run or view the application on cloud - 
-http://siemt.ngrok.io (real time statistics)
+Cloud deployment - 
 http://mysterious-crag-2539.herokuapp.com 
+Please note to display real time analytics and run the rules engine it is required to have the sensor connected to the application, else the real time charts wont be displayed. If the sensor is not connected user can still view the historical charts.
 
 ###Run the app
 install all the node modules- get into the project directory and run sudo npm install
 Switch on the TI sensor 
 run the following command- node app.js
 
+###Team
+Divanshu Arneja 
+FNU Shilpa
+Shivadeepthi Chilukuri 
+Anshul Sharma 
